@@ -1,6 +1,6 @@
 ﻿using CritRDevEx.API.LoanAccount;
 using CritRDevEx.API.LoanAccount.BlockAccount;
-using static CritRDevEx.API.LoanAccount.BlockAccount.BlockAccountHandler;
+using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.BlockAccount;
 
@@ -9,20 +9,20 @@ public class HandlerTests
     [Fact]
     public void BlockAccountEmitsAccountBlocked()
     {
-        BlockAccountHandler.BlockAccount request = new(default);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
+        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (events, _) = Handle(request, account);
 
         Assert.Single(events);
-        Assert.IsType<AccountBlocked>(events[0]);
+        Assert.IsType<LoanAccountBlocked>(events[0]);
     }
 
     [Fact]
     public void BlockAccountEmitsNoOutgoingMessages()
     {
-        BlockAccountHandler.BlockAccount request = new(default);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
+        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (_, outgoingMessages) = Handle(request, account);
 
@@ -32,9 +32,9 @@ public class HandlerTests
     [Fact]
     public void CannotBlockAlreadyBlockedAccount()
     {
-        BlockAccountHandler.BlockAccount request = new(default);
+        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
 
-        Account account = new(default, default, 1000, 500, AccountStatus.Blocked, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => Handle(request, account));
     }

@@ -1,6 +1,6 @@
 ﻿namespace CritRDevEx.API.LoanAccount.Withdraw;
 
 public sealed record MoneyWithdrawn(
-        Guid AccountId,
+        Guid LoanAccountId,
         decimal Amount
     ) : LoanAccountEvent;

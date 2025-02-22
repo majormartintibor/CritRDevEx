@@ -27,9 +27,9 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
 
         foreach (var request in pendingRequests)
         {
-            var lifetimeDeposit = await GetLifetimeDepositAmount(request.AccountId, session);
+            var lifetimeDeposit = await GetLifetimeDepositAmount(request.LoanAccountId, session);
 
-            var command = new AuditLimitIncreaseRequest(request.AccountId, lifetimeDeposit);
+            var command = new AuditLimitIncreaseRequest(request.LoanAccountId, lifetimeDeposit);
             //invoke vs send:
             //send is fire and forget
             //invoke is fire and wait for response
@@ -39,10 +39,10 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
         }
     }
 
-    private static async Task<decimal> GetLifetimeDepositAmount(Guid accountId, IQuerySession session)
+    private static async Task<decimal> GetLifetimeDepositAmount(Guid loanAccountId, IQuerySession session)
     {
         var totalAmount = await session.Events.QueryRawEventDataOnly<MoneyDeposited>()
-                                              .Where(e => e.AccountId == accountId)
+                                              .Where(e => e.LoanAccountId == loanAccountId)
                                               .SumAsync(e => e.Amount);
 
         return totalAmount;

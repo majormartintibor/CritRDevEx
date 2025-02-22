@@ -1,6 +1,6 @@
 ﻿namespace CritRDevEx.API.LoanAccount;
 
-public enum AccountStatus
+public enum LoanAccountStatus
 {
     Default = 0,
     Blocked = 8

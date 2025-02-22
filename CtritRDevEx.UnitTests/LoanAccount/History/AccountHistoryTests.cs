@@ -52,8 +52,8 @@ public class AccountHistoryTests
     [Fact]
     public void Transform_WhenAccountBlocked_ShouldReturnAccountHistory()
     {
-        var accountBlocked = new AccountBlocked(default);
-        var @event = new Event<AccountBlocked>(accountBlocked);
+        var accountBlocked = new LoanAccountBlocked(default);
+        var @event = new Event<LoanAccountBlocked>(accountBlocked);
         @event.Timestamp = DateTimeOffset.Now;
         var sut = new LoanAccountHistoryTransformation();
 

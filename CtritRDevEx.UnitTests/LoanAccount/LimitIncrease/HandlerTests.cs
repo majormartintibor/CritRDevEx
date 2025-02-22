@@ -9,9 +9,9 @@ public class HandlerTests
     [Fact]
     public void Handle_WhenAccountIsBlocked_ShouldReturnLimitIncreaseRejectedEvent()
     {        
-        var account = new Account
+        var account = new CritRDevEx.API.LoanAccount.LoanAccount
         {
-            AccountStatus = AccountStatus.Blocked,
+            AccountStatus = LoanAccountStatus.Blocked,
             Limit = -1000
         };
         var request = new AuditLimitIncreaseRequest(default, 1000);
@@ -25,9 +25,9 @@ public class HandlerTests
     [Fact]
     public void Handle_WhenLifetimeDepositsIsLessThanThreeTimesLimit_ShouldReturnLimitIncreaseRejectedEvent()
     {        
-        var account = new Account
+        var account = new CritRDevEx.API.LoanAccount.LoanAccount
         {
-            AccountStatus = AccountStatus.Default,
+            AccountStatus = LoanAccountStatus.Default,
             Limit = -1000
         };
         var request = new AuditLimitIncreaseRequest(default, 2000);
@@ -41,9 +41,9 @@ public class HandlerTests
     [Fact]
     public void Handle_WhenLifetimeDepositsIsThreeTimesLimit_ShouldReturnLimitIncreaseGrantedEvent()
     {
-        var account = new Account
+        var account = new CritRDevEx.API.LoanAccount.LoanAccount
         {
-            AccountStatus = AccountStatus.Default,
+            AccountStatus = LoanAccountStatus.Default,
             Limit = -1000
         };
         var request = new AuditLimitIncreaseRequest(default, 3000);

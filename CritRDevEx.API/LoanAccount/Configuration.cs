@@ -9,7 +9,7 @@ public static class Configuration
 {
     public static void AddLoanAccountProjections(this StoreOptions options)
     {
-        options.Projections.LiveStreamAggregation<Account>();
+        options.Projections.LiveStreamAggregation<LoanAccount>();
         options.Projections.Add<PendingLimitIncreaseRequestProjection>(ProjectionLifecycle.Inline);
         options.Projections.Add<LoanAccountHistoryTransformation>(ProjectionLifecycle.Async);
     }

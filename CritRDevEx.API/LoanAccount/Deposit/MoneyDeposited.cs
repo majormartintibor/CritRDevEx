@@ -1,6 +1,6 @@
 ﻿namespace CritRDevEx.API.LoanAccount.Deposit;
 
 public sealed record MoneyDeposited(
-        Guid AccountId,
+        Guid LoanAccountId,
         decimal Amount
     ) : LoanAccountEvent;

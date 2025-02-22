@@ -20,15 +20,15 @@ public static class Endpoint
 
     public static async Task<bool> LoadAsync(CreateLoanAccount request, IQuerySession session)
     {
-        return await session.Query<Account>()
+        return await session.Query<LoanAccount>()
             .AnyAsync(account => account.DebtorId == request.DebtorId);
     }
 
-    public const string CreateAccountEnpoint = "/api/loanAccount/create";
+    public const string CreateLoanAccountEndpoint = "/api/loanAccount/create";
     private const decimal defaultLimit = -30000;
 
     [Tags(Tag.LoanAccount)]
-    [WolverinePost(CreateAccountEnpoint)]
+    [WolverinePost(CreateLoanAccountEndpoint)]
     public static (IResult, IStartStream) CreateNewAccount(
         CreateLoanAccount request,
         bool hasExistingAccount)
@@ -38,7 +38,7 @@ public static class Endpoint
 
         LoanAccountCreated created = new(request.DebtorId, defaultLimit);
 
-        var open = MartenOps.StartStream<Account>(created);
+        var open = MartenOps.StartStream<LoanAccount>(created);
 
         return (Results.Ok(open.StreamId),open);        
     }

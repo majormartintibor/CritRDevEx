@@ -9,7 +9,7 @@ public static class Endpoint
     public const string GetAccountHistoryEnpoint = "/api/loanAccount/history/";
 
     [Tags(Tag.LoanAccount)]
-    [WolverineGet(GetAccountHistoryEnpoint + "{accountId:guid}")]
-    public static Task GetInspection([FromRoute] Guid accountId, IQuerySession querySession, CancellationToken ct)
-        => querySession.Query<AccountHistory>().Where(i => i.AccountId == accountId).ToListAsync(ct);
+    [WolverineGet(GetAccountHistoryEnpoint + "{loanAccountId:guid}")]
+    public static Task GetInspection([FromRoute] Guid LoanAccountId, IQuerySession querySession, CancellationToken ct)
+        => querySession.Query<LoanAccountHistory>().Where(i => i.LoanAccountId == LoanAccountId).ToListAsync(ct);
 }

@@ -7,13 +7,13 @@ namespace CritRDevEx.API.LoanAccount.LimitIncrease;
 
 public static class AuditLimitIncreaseRequestHandler
 {
-    public sealed record AuditLimitIncreaseRequest(Guid AccountId, decimal LifetimeDeposits)
+    public sealed record AuditLimitIncreaseRequest(Guid LoanAccountId, decimal LifetimeDeposits)
     {
         public sealed class AuditLimitIncreaseRequestValidator : AbstractValidator<AuditLimitIncreaseRequest>
         {
             public AuditLimitIncreaseRequestValidator()
             {
-                RuleFor(x => x.AccountId).NotEmpty();
+                RuleFor(x => x.LoanAccountId).NotEmpty();
                 RuleFor(x => x.LifetimeDeposits).GreaterThanOrEqualTo(0);
             }
         }
@@ -22,21 +22,21 @@ public static class AuditLimitIncreaseRequestHandler
     [AggregateHandler]
     public static (Events, OutgoingMessages) Handle(
     AuditLimitIncreaseRequest request,
-    [Required] Account account)
+    [Required] LoanAccount account)
     {
         var events = new Events();
         var messages = new OutgoingMessages();
 
         var eventType = 
-            account.AccountStatus == AccountStatus.Blocked 
+            account.AccountStatus == LoanAccountStatus.Blocked 
             || request.LifetimeDeposits < (Math.Abs(account.Limit) * 3)
                 ? typeof(LimitIncreaseRejected)
                 : typeof(LimitIncreaseGranted);
 
         events.Add(
             eventType == typeof(LimitIncreaseGranted)
-            ? new LimitIncreaseGranted(account.AccountId, 10000)
-            : new LimitIncreaseRejected(account.AccountId)
+            ? new LimitIncreaseGranted(account.LoanAccountId, 10000)
+            : new LimitIncreaseRejected(account.LoanAccountId)
         );
 
         return (events, messages);

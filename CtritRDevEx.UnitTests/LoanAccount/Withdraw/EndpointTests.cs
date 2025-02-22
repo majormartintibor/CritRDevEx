@@ -11,7 +11,7 @@ public class EndpointTests
     public void WithdrawalSucceeds()
     {
         WithdrawFromLoanAccount request = new(default, 100);
-        Account account = new(default, default, -1000, -500, AccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Default, default);
 
         var (result, _, _) = WithdrawFromAccount(request, account);
 
@@ -22,7 +22,7 @@ public class EndpointTests
     public void WithdrawalEmitsMoneyWithdrawn()
     {
         WithdrawFromLoanAccount request = new(Guid.NewGuid(), 100);
-        Account account = new(default, default, -1000, -500, AccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Default, default);
 
         var (_, events, _) = WithdrawFromAccount(request, account);
 
@@ -34,7 +34,7 @@ public class EndpointTests
     public void WithdrawalEmitsNoOutgoingMessages()
     {
         WithdrawFromLoanAccount request = new(default, 100);
-        Account account = new(default, default, -1000, -500, AccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Default, default);
 
         var (_, _, outgoingMessages) = WithdrawFromAccount(request, account);
 
@@ -46,7 +46,7 @@ public class EndpointTests
     public void WithdrawalAmountExceedsAccountLimitThrowsException()
     {
         WithdrawFromLoanAccount request = new(default, 1000);
-        Account account = new(default, default, -1000, -500, AccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Default, default);
         
         Assert.Throws<InvalidOperationException>(() => WithdrawFromAccount(request, account));
     }
@@ -55,7 +55,7 @@ public class EndpointTests
     public void CannotWithdrawFromBlockedAccount()
     {
         WithdrawFromLoanAccount request = new(default, 100);
-        Account account = new(default, default, -1000, -500, AccountStatus.Blocked, default);
+        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => WithdrawFromAccount(request, account));
     }

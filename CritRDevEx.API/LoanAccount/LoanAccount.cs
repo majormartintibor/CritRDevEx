@@ -9,20 +9,20 @@ using Marten.Events.Aggregation;
 namespace CritRDevEx.API.LoanAccount;
 
 //Decision model for the account stream
-public sealed record Account(
-    Guid AccountId,
+public sealed record LoanAccount(
+    Guid LoanAccountId,
     Guid DebtorId,
     decimal Limit,
     decimal Balance,
-    AccountStatus AccountStatus,
+    LoanAccountStatus AccountStatus,
     DateTimeOffset LastLimitEvaluationDate)
 {
-    public Account() 
-        : this(default, default, default, default, AccountStatus.Default, default)
+    public LoanAccount() 
+        : this(default, default, default, default, LoanAccountStatus.Default, default)
     {        
     }
 
-    public Account Apply(IEvent<LoanAccountEvent> @event) =>
+    public LoanAccount Apply(IEvent<LoanAccountEvent> @event) =>
         @event.Data switch
         {
             LoanAccountCreated(Guid debtorId, decimal initialLimit) =>
@@ -31,8 +31,8 @@ public sealed record Account(
                 this with { Balance = Balance + amount },
             MoneyWithdrawn(Guid, decimal amount) =>
                 this with { Balance = Balance - amount },
-            AccountBlocked(Guid) =>
-                this with { AccountStatus = AccountStatus.Blocked },
+            LoanAccountBlocked(Guid) =>
+                this with { AccountStatus = LoanAccountStatus.Blocked },
             LimitIncreaseGranted(Guid, decimal limitIncreaseAmount) =>
                 this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = @event.Timestamp },
             LimitIncreaseRejected(Guid) =>
@@ -41,9 +41,9 @@ public sealed record Account(
         };
 }
 
-public sealed class AccountProjection
-    : SingleStreamProjection<Account>
+public sealed class LoanAccountProjection
+    : SingleStreamProjection<LoanAccount>
 {
-    public Account Apply(IEvent<LoanAccountEvent> @event, Account current)
+    public LoanAccount Apply(IEvent<LoanAccountEvent> @event, LoanAccount current)
         => current.Apply(@event);
 }
