@@ -11,7 +11,7 @@ public class EndpointTests
     public void DepositSucceeds()
     {
         DepositToLoanAccount request = new(default, 100);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default);
+        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
 
         var (result, _, _) = DepositToAccount(request, account);
 
@@ -22,7 +22,7 @@ public class EndpointTests
     public void DepositEmitsMoneyDeposited()
     {
         DepositToLoanAccount request = new(default, 100);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default);
+        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
         
         var (_, events, _) = DepositToAccount(request, account);
 
@@ -34,7 +34,7 @@ public class EndpointTests
     public void DepositEmitsNoOutgoingMessages()
     {
         DepositToLoanAccount request = new(default, 100);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default);
+        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
 
         var (_, _, outgoingMessages) = DepositToAccount(request, account);
 
@@ -45,7 +45,7 @@ public class EndpointTests
     public void CannotDepositToBlockedAccount()
     {
         DepositToLoanAccount request = new(default, 100);
-        Account account = new(default, default, 1000, 500, AccountStatus.Blocked);
+        Account account = new(default, default, 1000, 500, AccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => DepositToAccount(request, account));
     }

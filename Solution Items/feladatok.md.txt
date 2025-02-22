@@ -1,0 +1,6 @@
+1. Jelenleg az account és loan account fogalmak összefolynak. Hogyan modelleznéd ha többféle account típus létezne?
+2. Az account streamnek jelenleg nincs belátható vége. Hogyan modelleznéd a "closing the books" patternt?
+2. extra: hogyan valósítanád meg, hogy a ciklus lezárása és az új ciklus nyitása egy tranzakcióban történjen?
+3. A felvett loan-nak jelenleg nincs se lejárati dátuma, se kamata. Hogyan modelleznéd ezeket a tulajdonságokat?
+3. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
+4. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?

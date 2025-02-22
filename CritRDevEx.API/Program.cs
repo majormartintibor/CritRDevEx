@@ -1,6 +1,8 @@
+using CritRDevEx.API.LoanAccount;
 using JasperFx.CodeGeneration;
 using JasperFx.Core;
 using Marten;
+using Marten.Events.Daemon.Resiliency;
 using Marten.Exceptions;
 using Npgsql;
 using Oakton;
@@ -8,6 +10,8 @@ using Weasel.Core;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.FluentValidation;
+using Wolverine.Http;
+using Wolverine.Http.FluentValidation;
 using Wolverine.Marten;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +25,13 @@ builder.Services
         var connectionString = builder.Configuration.GetConnectionString("Default");
         opts.Connection(connectionString!);
 
-        opts.AutoCreateSchemaObjects = AutoCreate.All;        
+        opts.AutoCreateSchemaObjects = AutoCreate.All;
+        
+        opts.AddLoanAccountProjections();
     })
-    .IntegrateWithWolverine();
+    .IntegrateWithWolverine()
+    //single node, for development
+    .AddAsyncDaemon(DaemonMode.Solo);
 
 builder.Host.UseWolverine(opts =>
 {
@@ -52,6 +60,14 @@ builder.Host.UseWolverine(opts =>
 });
 
 var app = builder.Build();
+
+app.MapWolverineEndpoints(opts =>
+{
+    // Direct Wolverine.HTTP to use Fluent Validation
+    // middleware to validate any request bodies where
+    // there's a known validator (or many validators)
+    opts.UseFluentValidationProblemDetailMiddleware();    
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

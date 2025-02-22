@@ -10,7 +10,7 @@ public class HandlerTests
     public void BlockAccountEmitsAccountBlocked()
     {
         BlockAccountHandler.BlockAccount request = new(default);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default);
+        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
 
         var (events, _) = Handle(request, account);
 
@@ -22,7 +22,7 @@ public class HandlerTests
     public void BlockAccountEmitsNoOutgoingMessages()
     {
         BlockAccountHandler.BlockAccount request = new(default);
-        Account account = new(default, default, 1000, 500, AccountStatus.Default);
+        Account account = new(default, default, 1000, 500, AccountStatus.Default, default);
 
         var (_, outgoingMessages) = Handle(request, account);
 
@@ -34,7 +34,7 @@ public class HandlerTests
     {
         BlockAccountHandler.BlockAccount request = new(default);
 
-        Account account = new(default, default, 1000, 500, AccountStatus.Blocked);
+        Account account = new(default, default, 1000, 500, AccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => Handle(request, account));
     }
