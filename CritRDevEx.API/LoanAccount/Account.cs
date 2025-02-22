@@ -26,7 +26,7 @@ public sealed record Account(
         @event.Data switch
         {
             LoanAccountCreated(Guid debtorId, decimal initialLimit) =>
-                this with { DebtorId = debtorId, Limit = initialLimit, Balance = initialLimit, LastLimitEvaluationDate = @event.Timestamp },
+                this with { DebtorId = debtorId, Limit = initialLimit, LastLimitEvaluationDate = @event.Timestamp },
             MoneyDeposited(Guid, decimal amount) =>
                 this with { Balance = Balance + amount },
             MoneyWithdrawn(Guid, decimal amount) =>

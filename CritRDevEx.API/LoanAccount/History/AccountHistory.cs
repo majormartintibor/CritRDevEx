@@ -74,6 +74,6 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
         return new AccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.Id,
-            $"Limit increase request has been rejected at: {input.Timestamp}");
+            $"Limit increase has been rejected at: {input.Timestamp}");
     }
 }

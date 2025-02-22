@@ -43,7 +43,7 @@ public class EndpointTests
 
 
     [Fact]
-    public void WithdrawalAmountExceedsAccountLimit()
+    public void WithdrawalAmountExceedsAccountLimitThrowsException()
     {
         WithdrawFromLoanAccount request = new(default, 1000);
         Account account = new(default, default, -1000, -500, AccountStatus.Default, default);
