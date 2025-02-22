@@ -25,7 +25,7 @@ public static class Endpoint
     }
 
     public const string CreateAccountEnpoint = "/api/loanAccount/create";
-    private const decimal defaultLimit = 30000;
+    private const decimal defaultLimit = -30000;
 
     [Tags(Tag.LoanAccount)]
     [WolverinePost(CreateAccountEnpoint)]

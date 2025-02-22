@@ -12,12 +12,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.13.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
     <PackageReference Include="WolverineFx.Http.FluentValidation" Version="3.9.1" />
     <PackageReference Include="WolverineFx.Http.Marten" Version="3.9.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="LoanAccount\LimitIncreaseProcessor\" />
   </ItemGroup>
 
   <ItemGroup>

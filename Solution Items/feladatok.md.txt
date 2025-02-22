@@ -4,3 +4,4 @@
 3. A felvett loan-nak jelenleg nincs se lejárati dátuma, se kamata. Hogyan modelleznéd ezeket a tulajdonságokat?
 3. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
 4. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?
+5. Bármi más, ami eszedbe jut :)

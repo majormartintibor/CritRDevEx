@@ -1,4 +1,5 @@
 using CritRDevEx.API.LoanAccount;
+using CritRDevEx.API.QuartzConfiguration;
 using JasperFx.CodeGeneration;
 using JasperFx.Core;
 using Marten;
@@ -6,6 +7,7 @@ using Marten.Events.Daemon.Resiliency;
 using Marten.Exceptions;
 using Npgsql;
 using Oakton;
+using Quartz;
 using Weasel.Core;
 using Wolverine;
 using Wolverine.ErrorHandling;
@@ -32,6 +34,8 @@ builder.Services
     .IntegrateWithWolverine()
     //single node, for development
     .AddAsyncDaemon(DaemonMode.Solo);
+
+builder.Services.AddProcessors();
 
 builder.Host.UseWolverine(opts =>
 {
