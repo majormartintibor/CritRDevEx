@@ -5,6 +5,6 @@
 4. A felvett loan-nak jelenleg nincs se lejárati dátuma, se kamata. Hogyan modelleznéd ezeket a tulajdonságokat?
 4. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
 5. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?
-6. A blocked vizsgálat áthelyezése middleware-be, minden loan accountot érintõ hívásra fusson le.
+6. A blocked vizsgálat kiszervezése a handlerekbõl, minden loan accountot érintõ hívásra fusson le.
 
 1000. Bármi más, ami eszedbe jut :)

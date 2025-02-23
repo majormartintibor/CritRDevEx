@@ -23,7 +23,9 @@ builder.Services
     .AddOpenApi()
     .AddMarten(opts =>
     {
-        var connectionString = builder.Configuration.GetConnectionString("Default");
+        var connectionString =
+            builder.Configuration.GetConnectionString("Default");
+            
         opts.Connection(connectionString!);
 
         opts.AutoCreateSchemaObjects = AutoCreate.All;
