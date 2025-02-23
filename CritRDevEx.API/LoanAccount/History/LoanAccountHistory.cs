@@ -20,7 +20,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"Account has been created at: {input.Timestamp} with initial limit of: {initialLimit}");
     }
 
@@ -30,7 +30,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"{amount} has been withdrawn at: {input.Timestamp}");
     }
 
@@ -40,7 +40,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"{amount} has been deposited at: {input.Timestamp}");
     }
 
@@ -48,7 +48,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
     {
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"Account has been blocked at: {input.Timestamp}");
     }
 
@@ -56,7 +56,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
     {
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"Limit increase has been requested at: {input.Timestamp}");
     }
 
@@ -66,7 +66,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"Limit increase has been granted at: {input.Timestamp} with increase of {amount}");
     }
 
@@ -74,7 +74,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
     {
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
-            input.Id,
+            input.StreamId,
             $"Limit increase has been rejected at: {input.Timestamp}");
     }
 }

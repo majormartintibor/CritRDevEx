@@ -9,7 +9,7 @@ public sealed record PendigLimitIncreaseRequest(
     LimitIncreaseRequestStatus Status)
 {
     public PendigLimitIncreaseRequest() 
-        : this(Guid.Empty, LimitIncreaseRequestStatus.Pending)
+        : this(Guid.Empty, LimitIncreaseRequestStatus.NoRequest)
     {        
     }
 
@@ -20,10 +20,10 @@ public sealed record PendigLimitIncreaseRequest(
                 this with { Status = LimitIncreaseRequestStatus.Pending },
 
             LimitIncreaseGranted(Guid, decimal) =>
-                this with { Status =  LimitIncreaseRequestStatus.Granted },
+                this with { Status =  LimitIncreaseRequestStatus.NoRequest },
 
             LimitIncreaseRejected(Guid) =>
-                this with { Status = LimitIncreaseRequestStatus.Rejected },
+                this with { Status = LimitIncreaseRequestStatus.NoRequest },
 
             _ => this
         };

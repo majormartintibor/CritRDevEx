@@ -17,24 +17,24 @@ public class PendingLimitIncreaseTests
     }
 
     [Fact]
-    public void Apply_WhenLimitIncreaseGranted_ShouldReturnRequestWithGrantedStatus()
+    public void Apply_WhenLimitIncreaseGranted_ShouldReturnRequestWithNoRequestStatus()
     {
         PendigLimitIncreaseRequest pendingLimitIncreaseRequest = new();
         LimitIncreaseGranted @event = new(default, default);
 
         var result = pendingLimitIncreaseRequest.Apply(@event);
 
-        Assert.Equal(LimitIncreaseRequestStatus.Granted, result.Status);
+        Assert.Equal(LimitIncreaseRequestStatus.NoRequest, result.Status);
     }
 
     [Fact]
-    public void Apply_WhenLimitIncreaseRejected_ShouldReturnRequestWithRejectedStatus()
+    public void Apply_WhenLimitIncreaseRejected_ShouldReturnRequestWithNoRequestStatus()
     {
         PendigLimitIncreaseRequest pendingLimitIncreaseRequest = new();
         LimitIncreaseRejected @event = new(default);
 
         var result = pendingLimitIncreaseRequest.Apply(@event);
 
-        Assert.Equal(LimitIncreaseRequestStatus.Rejected, result.Status);
+        Assert.Equal(LimitIncreaseRequestStatus.NoRequest, result.Status);
     }
 }

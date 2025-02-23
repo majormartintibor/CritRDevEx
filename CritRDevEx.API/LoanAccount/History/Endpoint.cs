@@ -10,6 +10,15 @@ public static class Endpoint
 
     [Tags(Tag.LoanAccount)]
     [WolverineGet(GetAccountHistoryEnpoint + "{loanAccountId:guid}")]
-    public static Task GetInspection([FromRoute] Guid LoanAccountId, IQuerySession querySession, CancellationToken ct)
-        => querySession.Query<LoanAccountHistory>().Where(i => i.LoanAccountId == LoanAccountId).ToListAsync(ct);
+    public static async Task<IReadOnlyList<LoanAccountHistory>> GetInspection(
+        [FromRoute] Guid loanAccountId, 
+        IQuerySession querySession, 
+        CancellationToken ct)
+    {
+        var all = await querySession.Query<LoanAccountHistory>().ToListAsync(ct);
+
+        var list = all.Where(h => h.LoanAccountId == loanAccountId).ToList();
+
+        return list;
+    }
 }

@@ -63,7 +63,7 @@ builder.Host.UseWolverine(opts =>
     // endpoints
     opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
 
-    //add local queue stuff here
+    //add local stuff here
 });
 
 var app = builder.Build();
@@ -87,3 +87,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 return await app.RunOaktonCommands(args);
+
+public partial class Program { }

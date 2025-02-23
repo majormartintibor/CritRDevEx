@@ -19,7 +19,7 @@ public static class Endpoint
         }
     }
 
-    public const string RequestLimitIncreaseEndpoint = "/api/loanAccount/limitIncrease";
+    public const string RequestLimitIncreaseEndpoint = "/api/loanAccount/requestLimitIncrease";
 
     [Tags(Tag.LoanAccount)]
     [WolverinePost(RequestLimitIncreaseEndpoint)]

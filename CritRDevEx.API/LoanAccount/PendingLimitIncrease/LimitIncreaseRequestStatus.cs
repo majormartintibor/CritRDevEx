@@ -2,7 +2,6 @@
 
 public enum LimitIncreaseRequestStatus
 {
-    Pending,
-    Granted,
-    Rejected
+    NoRequest = 0,
+    Pending = 8   
 }
