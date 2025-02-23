@@ -9,7 +9,7 @@ public class HandlerTests
     [Fact]
     public void BlockAccountEmitsAccountBlocked()
     {
-        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
+        BlockLoanAccount request = new(default);
         CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (events, _) = Handle(request, account);
@@ -21,7 +21,7 @@ public class HandlerTests
     [Fact]
     public void BlockAccountEmitsNoOutgoingMessages()
     {
-        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
+        BlockLoanAccount request = new(default);
         CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (_, outgoingMessages) = Handle(request, account);
@@ -32,7 +32,7 @@ public class HandlerTests
     [Fact]
     public void CannotBlockAlreadyBlockedAccount()
     {
-        BlockLoanAccountHandler.BlockLoanAccount request = new(default);
+        BlockLoanAccount request = new(default);
 
         CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 

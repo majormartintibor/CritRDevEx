@@ -1,4 +1,5 @@
 ﻿using CritRDevEx.API.LoanAccount;
+using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
 using CritRDevEx.API.LoanAccount.Deposit;
@@ -34,7 +35,7 @@ public class LoanAccountTests
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         var initialBalance = 1000m;
         var depositAmount = 500m;
-        var moneyDeposited = new MoneyDeposited(Guid.NewGuid(), depositAmount);
+        var moneyDeposited = new MoneyDeposited(default, depositAmount);
         var @event = new Event<LoanAccountEvent>(moneyDeposited);
         initialAccount = initialAccount with { Balance = initialBalance };
 
@@ -49,7 +50,7 @@ public class LoanAccountTests
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         var initialBalance = -1000m;
         var withdrawAmount = 500m;
-        var moneyWithdrawn = new MoneyWithdrawn(Guid.NewGuid(), withdrawAmount);
+        var moneyWithdrawn = new MoneyWithdrawn(default, withdrawAmount);
         var @event = new Event<LoanAccountEvent>(moneyWithdrawn);
         initialAccount = initialAccount with { Balance = initialBalance };
 
@@ -62,7 +63,7 @@ public class LoanAccountTests
     public void Apply_WhenAccountBlockedEvent_ShouldReturnAccountWithBlockedStatus()
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
-        var accountBlocked = new LoanAccountBlocked(Guid.NewGuid());
+        var accountBlocked = new LoanAccountBlocked(default);
         var @event = new Event<LoanAccountEvent>(accountBlocked);
 
         var updatedAccount = initialAccount.Apply(@event);
@@ -71,12 +72,25 @@ public class LoanAccountTests
     }
 
     [Fact]
-    public void Apply_WhenLimitIncreaseGrantedEvent_ShouldReturnAccountWithDecreasedLimit()
+    public void Apply_WhenLimitIncreaseRequestedEvent_ShouldReturnAccountWithPendingLimitIncreaseRequest()
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var limitIncreaseRequested = new LimitIncreaseRequested(default);
+        var @event = new Event<LoanAccountEvent>(limitIncreaseRequested);
+
+        var updatedAccount = initialAccount.Apply(@event);
+
+        Assert.True(updatedAccount.HasPendingLimitIncreaseRequest);
+    }
+
+    [Fact]
+    public void Apply_WhenLimitIncreaseGrantedEvent_ShouldReturnAccountWithIncreasedLimit()
+    {
+        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
         var initialLimit = 1000m;
         var limitIncreaseAmount = 500m;
-        var limitIncreaseGranted = new LimitIncreaseGranted(Guid.NewGuid(), limitIncreaseAmount);
+        var limitIncreaseGranted = new LimitIncreaseGranted(default, limitIncreaseAmount);
         var @event = new Event<LoanAccountEvent>(limitIncreaseGranted);
         @event.Timestamp = DateTimeOffset.Now;
         initialAccount = initialAccount with { Limit = initialLimit };
@@ -85,13 +99,15 @@ public class LoanAccountTests
 
         Assert.Equal(initialLimit - limitIncreaseAmount, updatedAccount.Limit);
         Assert.Equal(@event.Timestamp, updatedAccount.LastLimitEvaluationDate);
+        Assert.False(updatedAccount.HasPendingLimitIncreaseRequest);
     }
 
     [Fact]
     public void Apply_WhenLimitIncreaseRejectedEvent_ShouldReturnAccountWithUpdatedLastLimitEvaluationDate()
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
-        var limitIncreaseRejected = new LimitIncreaseRejected(Guid.NewGuid());
+        initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
+        var limitIncreaseRejected = new LimitIncreaseRejected(default);
         var @event = new Event<LoanAccountEvent>(limitIncreaseRejected);
         @event.Timestamp = DateTimeOffset.Now;
 
@@ -99,5 +115,6 @@ public class LoanAccountTests
 
         Assert.Equal(initialAccount.Balance, updatedAccount.Balance);
         Assert.Equal(@event.Timestamp, updatedAccount.LastLimitEvaluationDate);
+        Assert.False(updatedAccount.HasPendingLimitIncreaseRequest);
     }
 }

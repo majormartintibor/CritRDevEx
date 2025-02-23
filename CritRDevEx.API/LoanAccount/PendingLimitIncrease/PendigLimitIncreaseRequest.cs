@@ -1,10 +1,11 @@
-﻿using CritRDevEx.API.LoanAccount.LimitIncrease;
+﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+using CritRDevEx.API.LoanAccount.LimitIncrease;
 using Marten.Events.Aggregation;
 
 namespace CritRDevEx.API.LoanAccount.PendingLimitIncrease;
 
 public sealed record PendigLimitIncreaseRequest(
-    Guid LoanAccountId, 
+    Guid Id, 
     LimitIncreaseRequestStatus Status)
 {
     public PendigLimitIncreaseRequest() 

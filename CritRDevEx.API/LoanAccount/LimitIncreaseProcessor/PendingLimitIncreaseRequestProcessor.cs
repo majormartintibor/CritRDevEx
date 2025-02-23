@@ -1,9 +1,9 @@
-﻿using CritRDevEx.API.LoanAccount.Deposit;
+﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+using CritRDevEx.API.LoanAccount.Deposit;
 using CritRDevEx.API.LoanAccount.PendingLimitIncrease;
 using Marten;
 using Quartz;
 using Wolverine;
-using static CritRDevEx.API.LoanAccount.LimitIncrease.AuditLimitIncreaseRequestHandler;
 
 namespace CritRDevEx.API.LoanAccount.LimitIncreaseProcessor;
 
@@ -27,9 +27,9 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
 
         foreach (var request in pendingRequests)
         {
-            var lifetimeDeposit = await GetLifetimeDepositAmount(request.LoanAccountId, session);
+            var lifetimeDeposit = await GetLifetimeDepositAmount(request.Id, session);
 
-            var command = new AuditLimitIncreaseRequest(request.LoanAccountId, lifetimeDeposit);
+            var command = new AuditLimitIncreaseRequestHandler.AuditLimitIncreaseRequest(request.Id, lifetimeDeposit);
             //invoke vs send:
             //send is fire and forget
             //invoke is fire and wait for response

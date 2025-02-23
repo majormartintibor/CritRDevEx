@@ -7,7 +7,6 @@ using Marten.Events.Daemon.Resiliency;
 using Marten.Exceptions;
 using Npgsql;
 using Oakton;
-using Quartz;
 using Weasel.Core;
 using Wolverine;
 using Wolverine.ErrorHandling;
@@ -37,9 +36,13 @@ builder.Services
 
 builder.Services.AddProcessors();
 
+builder.Services.AddWolverineHttp();
+
+builder.Services.AddSwaggerGen();
+
 builder.Host.UseWolverine(opts =>
 {
-    opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Static;
+    opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Dynamic;
 
     //durability for transient errors
     opts.OnException<NpgsqlException>().Or<MartenCommandException>()
@@ -77,6 +80,8 @@ app.MapWolverineEndpoints(opts =>
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

@@ -1,7 +1,8 @@
-1. Jelenleg csak egy fajta loan account létezik. Hogyan modelleznéd ha többféle account típus létezne?
-2. Az account streamnek jelenleg nincs belátható vége. Hogyan modelleznéd a "closing the books" patternt?
-2. extra: hogyan valósítanád meg, hogy a ciklus lezárása és az új ciklus nyitása egy tranzakcióban történjen?
-3. A felvett loan-nak jelenleg nincs se lejárati dátuma, se kamata. Hogyan modelleznéd ezeket a tulajdonságokat?
-3. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
-4. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?
-5. Bármi más, ami eszedbe jut :)
+1. Hiányzik egy olvasási model amit a felhasználónak adhatunk. Hogyan valósítanád meg?
+2. Jelenleg csak egy fajta loan account létezik. Hogyan modelleznéd ha többféle account típus létezne?
+3. Az account streamnek jelenleg nincs belátható vége. Hogyan modelleznéd a "closing the books" patternt?
+3. extra: hogyan valósítanád meg, hogy a ciklus lezárása és az új ciklus nyitása egy tranzakcióban történjen?
+4. A felvett loan-nak jelenleg nincs se lejárati dátuma, se kamata. Hogyan modelleznéd ezeket a tulajdonságokat?
+4. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
+5. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?
+6. Bármi más, ami eszedbe jut :)

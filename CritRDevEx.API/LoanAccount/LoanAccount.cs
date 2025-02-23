@@ -1,4 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount.BlockAccount;
+﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
 using CritRDevEx.API.LoanAccount.Deposit;
 using CritRDevEx.API.LoanAccount.LimitIncrease;
@@ -10,12 +11,13 @@ namespace CritRDevEx.API.LoanAccount;
 
 //Decision model for the account stream
 public sealed record LoanAccount(
-    Guid LoanAccountId,
+    Guid Id,
     Guid DebtorId,
     decimal Limit,
     decimal Balance,
     LoanAccountStatus AccountStatus,
-    DateTimeOffset LastLimitEvaluationDate)
+    DateTimeOffset LastLimitEvaluationDate,
+    bool HasPendingLimitIncreaseRequest = false)
 {
     public LoanAccount() 
         : this(default, default, default, default, LoanAccountStatus.Default, default)
@@ -33,10 +35,12 @@ public sealed record LoanAccount(
                 this with { Balance = Balance - amount },
             LoanAccountBlocked(Guid) =>
                 this with { AccountStatus = LoanAccountStatus.Blocked },
+            LimitIncreaseRequested(Guid) =>
+                this with { HasPendingLimitIncreaseRequest = true },
             LimitIncreaseGranted(Guid, decimal limitIncreaseAmount) =>
-                this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = @event.Timestamp },
+                this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = @event.Timestamp, HasPendingLimitIncreaseRequest = false },
             LimitIncreaseRejected(Guid) =>
-                this with { LastLimitEvaluationDate = @event.Timestamp },
+                this with { LastLimitEvaluationDate = @event.Timestamp, HasPendingLimitIncreaseRequest = false },
             _ => this
         };
 }
