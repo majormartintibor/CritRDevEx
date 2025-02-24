@@ -46,3 +46,4 @@ public static class Endpoint
         return (Results.Ok(), events, messages);
     }
 }
+ 

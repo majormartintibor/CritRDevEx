@@ -1,6 +1,8 @@
 ﻿using CritRDevEx.API.Clock;
+using CritRDevEx.API.LoanAccount.Details;
 using FluentValidation;
 using Marten;
+using Marten.Events;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine.Attributes;
 using Wolverine.Http;
@@ -24,10 +26,10 @@ public static class Endpoint
     [WolverineBefore]
     public static async Task<ProblemDetails> CheckIfDebtorAlreadyHasAnAccount(
         CreateLoanAccount request,
-        IQuerySession querySession)
+        IDocumentSession session)
     {
-        var hasExistingAccount = await querySession.Query<LoanAccount>()
-            .AnyAsync(account => account.DebtorId == request.DebtorId);
+        var hasExistingAccount = await session.Events.QueryRawEventDataOnly<LoanAccountCreated>()
+            .AnyAsync(e => e.DebtorId == request.DebtorId);        
 
         if (hasExistingAccount)
             return new ProblemDetails
@@ -49,7 +51,7 @@ public static class Endpoint
     { 
         LoanAccountCreated created = new(request.DebtorId, defaultLimit, DateTimeProvider.UtcNow);
 
-        var open = MartenOps.StartStream<LoanAccount>(created);
+        var open = MartenOps.StartStream<LoanAccount>(created);        
 
         return (Results.Ok(open.StreamId),open);        
     }    

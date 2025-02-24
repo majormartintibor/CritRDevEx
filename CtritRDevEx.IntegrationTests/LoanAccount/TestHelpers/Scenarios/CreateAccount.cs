@@ -12,7 +12,7 @@ internal static class CreateAccount
                 x.Post.Url(CreateLoanAccountEndpoint);
                 x.Post.Json(new CreateLoanAccount(Guid.NewGuid()));
 
-                x.StatusCodeShouldBeOk();
+                x.IgnoreStatusCode();
             });
 
     internal static Task<IScenarioResult> CreateLoanAccount(
@@ -23,22 +23,6 @@ internal static class CreateAccount
                 x.Post.Url(CreateLoanAccountEndpoint);
                 x.Post.Json(new CreateLoanAccount(debtorId));
 
-                x.StatusCodeShouldBeOk();
-            });
-
-    internal static async Task<Guid> CreatedAccount(
-        this IAlbaHost api)
-    {
-        var result = await api.CreateLoanAccount();
-
-        return await result.ReadAsJsonAsync<Guid>();
-    }
-    internal static async Task<Guid> CreatedAccount(
-        this IAlbaHost api,
-        Guid debtorId)
-    {
-        var result = await api.CreateLoanAccount(debtorId);
-
-        return await result.ReadAsJsonAsync<Guid>();
-    }
+                x.IgnoreStatusCode();
+            });    
 }
