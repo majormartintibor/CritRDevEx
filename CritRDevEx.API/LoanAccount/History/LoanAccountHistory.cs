@@ -16,32 +16,32 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
 {
     public LoanAccountHistory Transform(IEvent<LoanAccountCreated> input)
     {              
-        var (_, initialLimit) = input.Data;
+        var (_, initialLimit, createdAt) = input.Data;
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"Account has been created at: {input.Timestamp} with initial limit of: {initialLimit}");
+            $"Account has been created at: {createdAt} with initial limit of: {initialLimit}");
     }
 
     public LoanAccountHistory Transform(IEvent<MoneyWithdrawn> input)
     {        
-        var (_, amount) = input.Data;
+        var (_, amount, transactionDate) = input.Data;
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"{amount} has been withdrawn at: {input.Timestamp}");
+            $"{amount} has been withdrawn at: {transactionDate}");
     }
 
     public LoanAccountHistory Transform(IEvent<MoneyDeposited> input)
     {
-        var(_, amount) = input.Data;
+        var(_, amount, transactionDate) = input.Data;
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"{amount} has been deposited at: {input.Timestamp}");
+            $"{amount} has been deposited at: {transactionDate}");
     }
 
     public LoanAccountHistory Transform(IEvent<LoanAccountBlocked> input)
@@ -49,7 +49,7 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"Account has been blocked at: {input.Timestamp}");
+            $"Account has been blocked at: {input.Data.BlockedAt}");
     }
 
     public LoanAccountHistory Transform(IEvent<LimitIncreaseRequested> input)
@@ -57,24 +57,26 @@ public sealed class LoanAccountHistoryTransformation : EventProjection
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"Limit increase has been requested at: {input.Timestamp}");
+            $"Limit increase has been requested at: {input.Data.RequestedAt}");
     }
 
     public LoanAccountHistory Transform(IEvent<LimitIncreaseGranted> input)
     {
-        var(_, amount) = input.Data;
+        var(_, amount, grantedAt) = input.Data;
 
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"Limit increase has been granted at: {input.Timestamp} with increase of {amount}");
+            $"Limit increase has been granted at: {grantedAt} with increase of {amount}");
     }
 
     public LoanAccountHistory Transform(IEvent<LimitIncreaseRejected> input)
     {
+        var (_, rejectedAt) = input.Data;
+
         return new LoanAccountHistory(
             CombGuidIdGeneration.NewGuid(),
             input.StreamId,
-            $"Limit increase has been rejected at: {input.Timestamp}");
+            $"Limit increase has been rejected at: {rejectedAt}");
     }
 }

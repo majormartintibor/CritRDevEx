@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CritRDevEx.API.Clock;
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Http;
@@ -41,7 +42,7 @@ public static class Endpoint
         if (account.LastLimitEvaluationDate > DateTimeOffset.UtcNow.AddDays(-30))
             throw new InvalidOperationException("Limit increase can be requested only once in 30 days");
 
-        events.Add(new LimitIncreaseRequested(request.LoanAccountId));
+        events.Add(new LimitIncreaseRequested(request.LoanAccountId, DateTimeProvider.UtcNow));
         return (Results.Ok(), events, messages);
     }
 }

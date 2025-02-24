@@ -9,7 +9,7 @@ public class PendingLimitIncreaseTests
     public void Apply_WhenLimitIncreaseRequested_ShouldReturnRequestWithPendingStatus()
     {
         PendigLimitIncreaseRequest pendingLimitIncreaseRequest = new();
-        LimitIncreaseRequested @event = new(default);
+        LimitIncreaseRequested @event = new(default, default);
                 
         var result = pendingLimitIncreaseRequest.Apply(@event);
                 
@@ -20,7 +20,7 @@ public class PendingLimitIncreaseTests
     public void Apply_WhenLimitIncreaseGranted_ShouldReturnRequestWithNoRequestStatus()
     {
         PendigLimitIncreaseRequest pendingLimitIncreaseRequest = new();
-        LimitIncreaseGranted @event = new(default, default);
+        LimitIncreaseGranted @event = new(default, default, default);
 
         var result = pendingLimitIncreaseRequest.Apply(@event);
 
@@ -31,7 +31,7 @@ public class PendingLimitIncreaseTests
     public void Apply_WhenLimitIncreaseRejected_ShouldReturnRequestWithNoRequestStatus()
     {
         PendigLimitIncreaseRequest pendingLimitIncreaseRequest = new();
-        LimitIncreaseRejected @event = new(default);
+        LimitIncreaseRejected @event = new(default, default);
 
         var result = pendingLimitIncreaseRequest.Apply(@event);
 

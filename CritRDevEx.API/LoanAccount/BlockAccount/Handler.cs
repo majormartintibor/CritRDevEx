@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CritRDevEx.API.Clock;
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Marten;
@@ -29,7 +30,7 @@ public static class BlockLoanAccountHandler
         if (account.AccountStatus == LoanAccountStatus.Blocked)
             throw new InvalidOperationException("Account is already blocked");
 
-        events.Add(new LoanAccountBlocked(request.LoanAccountId));
+        events.Add(new LoanAccountBlocked(request.LoanAccountId, DateTimeProvider.UtcNow));
 
         return (events, messages);
     }

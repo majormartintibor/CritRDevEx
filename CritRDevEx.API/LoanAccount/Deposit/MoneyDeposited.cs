@@ -2,5 +2,6 @@
 
 public sealed record MoneyDeposited(
         Guid LoanAccountId,
-        decimal Amount
+        decimal Amount,
+        DateTimeOffset TransactionDate
     ) : LoanAccountEvent;

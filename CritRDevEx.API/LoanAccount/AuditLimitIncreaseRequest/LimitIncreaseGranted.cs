@@ -2,4 +2,5 @@
 
 public sealed record LimitIncreaseGranted(
     Guid LoanAccountId,
-    decimal LimitIncreaseAmount) : LoanAccountEvent;
+    decimal LimitIncreaseAmount,
+    DateTimeOffset GrantedAt) : LoanAccountEvent;

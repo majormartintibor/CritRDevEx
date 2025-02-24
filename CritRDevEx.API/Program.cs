@@ -32,6 +32,7 @@ builder.Services
         
         opts.AddLoanAccountProjections();
     })
+    .UseLightweightSessions()
     .IntegrateWithWolverine()
     //single node, for development
     .AddAsyncDaemon(DaemonMode.Solo);

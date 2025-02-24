@@ -16,13 +16,13 @@ public sealed record PendigLimitIncreaseRequest(
     public PendigLimitIncreaseRequest Apply(LoanAccountEvent @event) =>
         @event switch
         {
-            LimitIncreaseRequested(Guid) =>
+            LimitIncreaseRequested(Guid, DateTimeOffset) =>
                 this with { Status = LimitIncreaseRequestStatus.Pending },
 
-            LimitIncreaseGranted(Guid, decimal) =>
+            LimitIncreaseGranted(Guid, decimal, DateTimeOffset) =>
                 this with { Status =  LimitIncreaseRequestStatus.NoRequest },
 
-            LimitIncreaseRejected(Guid) =>
+            LimitIncreaseRejected(Guid, DateTimeOffset) =>
                 this with { Status = LimitIncreaseRequestStatus.NoRequest },
 
             _ => this

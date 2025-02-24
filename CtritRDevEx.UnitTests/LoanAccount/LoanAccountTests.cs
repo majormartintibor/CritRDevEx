@@ -1,4 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount;
+﻿using CritRDevEx.API.Clock;
+using CritRDevEx.API.LoanAccount;
 using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
@@ -17,16 +18,16 @@ public class LoanAccountTests
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         var debtorId = Guid.NewGuid();
         var initialLimit = 1000m;
-        var loanAccountCreated = new LoanAccountCreated(debtorId, initialLimit);
-        var @event = new Event<LoanAccountEvent>(loanAccountCreated);
-        @event.Timestamp = DateTimeOffset.Now;
+        var createdAt = DateTimeOffset.Now;
+        var loanAccountCreated = new LoanAccountCreated(debtorId, initialLimit, createdAt);
+        var @event = new Event<LoanAccountEvent>(loanAccountCreated);        
 
         var updatedAccount = initialAccount.Apply(@event);
        
         Assert.Equal(debtorId, updatedAccount.DebtorId);
         Assert.Equal(initialLimit, updatedAccount.Limit);
         Assert.Equal(0, updatedAccount.Balance);
-        Assert.Equal(@event.Timestamp, updatedAccount.LastLimitEvaluationDate);
+        Assert.Equal(createdAt, updatedAccount.LastLimitEvaluationDate);
     }
 
     [Fact]
@@ -34,8 +35,8 @@ public class LoanAccountTests
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         var initialBalance = 1000m;
-        var depositAmount = 500m;
-        var moneyDeposited = new MoneyDeposited(default, depositAmount);
+        var depositAmount = 500m;        
+        var moneyDeposited = new MoneyDeposited(default, depositAmount, default);
         var @event = new Event<LoanAccountEvent>(moneyDeposited);
         initialAccount = initialAccount with { Balance = initialBalance };
 
@@ -49,8 +50,8 @@ public class LoanAccountTests
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         var initialBalance = -1000m;
-        var withdrawAmount = 500m;
-        var moneyWithdrawn = new MoneyWithdrawn(default, withdrawAmount);
+        var withdrawAmount = 500m;        
+        var moneyWithdrawn = new MoneyWithdrawn(default, withdrawAmount, default);
         var @event = new Event<LoanAccountEvent>(moneyWithdrawn);
         initialAccount = initialAccount with { Balance = initialBalance };
 
@@ -62,20 +63,20 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenAccountBlockedEvent_ShouldReturnAccountWithBlockedStatus()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
-        var accountBlocked = new LoanAccountBlocked(default);
+        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();        
+        var accountBlocked = new LoanAccountBlocked(default, default);
         var @event = new Event<LoanAccountEvent>(accountBlocked);
 
         var updatedAccount = initialAccount.Apply(@event);
 
-        Assert.Equal(LoanAccountStatus.Blocked, updatedAccount.AccountStatus);
+        Assert.Equal(LoanAccountStatus.Blocked, updatedAccount.AccountStatus);        
     }
 
     [Fact]
     public void Apply_WhenLimitIncreaseRequestedEvent_ShouldReturnAccountWithPendingLimitIncreaseRequest()
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
-        var limitIncreaseRequested = new LimitIncreaseRequested(default);
+        var limitIncreaseRequested = new LimitIncreaseRequested(default, default);
         var @event = new Event<LoanAccountEvent>(limitIncreaseRequested);
 
         var updatedAccount = initialAccount.Apply(@event);
@@ -90,15 +91,15 @@ public class LoanAccountTests
         initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
         var initialLimit = 1000m;
         var limitIncreaseAmount = 500m;
-        var limitIncreaseGranted = new LimitIncreaseGranted(default, limitIncreaseAmount);
-        var @event = new Event<LoanAccountEvent>(limitIncreaseGranted);
-        @event.Timestamp = DateTimeOffset.Now;
+        var grantedAt = DateTimeOffset.Now;
+        var limitIncreaseGranted = new LimitIncreaseGranted(default, limitIncreaseAmount, grantedAt);
+        var @event = new Event<LoanAccountEvent>(limitIncreaseGranted);        
         initialAccount = initialAccount with { Limit = initialLimit };
 
         var updatedAccount = initialAccount.Apply(@event);
 
         Assert.Equal(initialLimit - limitIncreaseAmount, updatedAccount.Limit);
-        Assert.Equal(@event.Timestamp, updatedAccount.LastLimitEvaluationDate);
+        Assert.Equal(grantedAt, updatedAccount.LastLimitEvaluationDate);
         Assert.False(updatedAccount.HasPendingLimitIncreaseRequest);
     }
 
@@ -107,14 +108,14 @@ public class LoanAccountTests
     {
         var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
         initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
-        var limitIncreaseRejected = new LimitIncreaseRejected(default);
-        var @event = new Event<LoanAccountEvent>(limitIncreaseRejected);
-        @event.Timestamp = DateTimeOffset.Now;
+        var rejectedAt = DateTimeOffset.Now;
+        var limitIncreaseRejected = new LimitIncreaseRejected(default, rejectedAt);
+        var @event = new Event<LoanAccountEvent>(limitIncreaseRejected);        
 
         var updatedAccount = initialAccount.Apply(@event);
 
         Assert.Equal(initialAccount.Balance, updatedAccount.Balance);
-        Assert.Equal(@event.Timestamp, updatedAccount.LastLimitEvaluationDate);
+        Assert.Equal(rejectedAt, updatedAccount.LastLimitEvaluationDate);
         Assert.False(updatedAccount.HasPendingLimitIncreaseRequest);
     }
 }

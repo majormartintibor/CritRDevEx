@@ -1,4 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+﻿using CritRDevEx.API.Clock;
+using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
 using CritRDevEx.API.LoanAccount.Deposit;
@@ -27,20 +28,20 @@ public sealed record LoanAccount(
     public LoanAccount Apply(IEvent<LoanAccountEvent> @event) =>
         @event.Data switch
         {
-            LoanAccountCreated(Guid debtorId, decimal initialLimit) =>
-                this with { DebtorId = debtorId, Limit = initialLimit, LastLimitEvaluationDate = @event.Timestamp },
-            MoneyDeposited(Guid, decimal amount) =>
+            LoanAccountCreated(Guid debtorId, decimal initialLimit, DateTimeOffset createdAt) =>
+                this with { DebtorId = debtorId, Limit = initialLimit, LastLimitEvaluationDate = createdAt },
+            MoneyDeposited(Guid, decimal amount, DateTimeOffset) =>
                 this with { Balance = Balance + amount },
-            MoneyWithdrawn(Guid, decimal amount) =>
+            MoneyWithdrawn(Guid, decimal amount, DateTimeOffset) =>
                 this with { Balance = Balance - amount },
-            LoanAccountBlocked(Guid) =>
+            LoanAccountBlocked(Guid, DateTimeOffset) =>
                 this with { AccountStatus = LoanAccountStatus.Blocked },
-            LimitIncreaseRequested(Guid) =>
+            LimitIncreaseRequested(Guid, DateTimeOffset) =>
                 this with { HasPendingLimitIncreaseRequest = true },
-            LimitIncreaseGranted(Guid, decimal limitIncreaseAmount) =>
-                this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = @event.Timestamp, HasPendingLimitIncreaseRequest = false },
-            LimitIncreaseRejected(Guid) =>
-                this with { LastLimitEvaluationDate = @event.Timestamp, HasPendingLimitIncreaseRequest = false },
+            LimitIncreaseGranted(Guid, decimal limitIncreaseAmount, DateTimeOffset grantedAt) =>
+                this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = grantedAt, HasPendingLimitIncreaseRequest = false },
+            LimitIncreaseRejected(Guid, DateTimeOffset rejectedAt) =>
+                this with { LastLimitEvaluationDate = rejectedAt, HasPendingLimitIncreaseRequest = false },
             _ => this
         };
 }

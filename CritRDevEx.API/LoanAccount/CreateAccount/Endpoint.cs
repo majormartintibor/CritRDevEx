@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CritRDevEx.API.Clock;
+using FluentValidation;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine.Attributes;
@@ -46,7 +47,7 @@ public static class Endpoint
     public static (IResult, IStartStream) CreateNewAccount(
         CreateLoanAccount request)
     { 
-        LoanAccountCreated created = new(request.DebtorId, defaultLimit);
+        LoanAccountCreated created = new(request.DebtorId, defaultLimit, DateTimeProvider.UtcNow);
 
         var open = MartenOps.StartStream<LoanAccount>(created);
 

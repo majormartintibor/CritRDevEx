@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CritRDevEx.API.Clock;
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Http;
@@ -35,7 +36,7 @@ public static class Endpoint
         if (account.AccountStatus == LoanAccountStatus.Blocked)
             throw new InvalidOperationException("Account is blocked");
 
-        events.Add(new MoneyDeposited(request.LoanAccountId, request.Amount));
+        events.Add(new MoneyDeposited(request.LoanAccountId, request.Amount, DateTimeProvider.UtcNow));
 
         return (Results.Ok(), events, messages);
     }

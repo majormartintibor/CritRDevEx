@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CritRDevEx.API.Clock;
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Marten;
@@ -35,8 +36,8 @@ public static class AuditLimitIncreaseRequestHandler
 
         events.Add(
             eventType == typeof(LimitIncreaseGranted)
-            ? new LimitIncreaseGranted(account.Id, 10000)
-            : new LimitIncreaseRejected(account.Id)
+            ? new LimitIncreaseGranted(account.Id, 10000, DateTimeProvider.UtcNow)
+            : new LimitIncreaseRejected(account.Id, DateTimeProvider.UtcNow)
         );
 
         return (events, messages);

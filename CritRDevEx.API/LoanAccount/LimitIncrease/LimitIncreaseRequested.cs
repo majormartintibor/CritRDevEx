@@ -1,4 +1,5 @@
 ﻿namespace CritRDevEx.API.LoanAccount.LimitIncrease;
 
 public sealed record LimitIncreaseRequested(
-    Guid LoanAccountId) : LoanAccountEvent;
+    Guid LoanAccountId,
+    DateTimeOffset RequestedAt) : LoanAccountEvent;

@@ -2,5 +2,6 @@
 
 public sealed record LoanAccountCreated(        
         Guid DebtorId,
-        decimal IntialLimit
+        decimal IntialLimit,
+        DateTimeOffset CreatedAt
     ) : LoanAccountEvent;

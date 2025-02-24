@@ -1,4 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+﻿using CritRDevEx.API.Clock;
+using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
 using CritRDevEx.API.LoanAccount.Deposit;
@@ -14,91 +15,91 @@ public class AccountHistoryTests
     [Fact]
     public void Transform_WhenLoanAccountCreated_ShouldReturnAccountHistory()
     {        
-        var loanAccountCreated = new LoanAccountCreated(default, 1000);
-        var @event = new Event<LoanAccountCreated>(loanAccountCreated);
-        @event.Timestamp = DateTimeOffset.Now;
+        var createdAt = DateTimeProvider.UtcNow;
+        var loanAccountCreated = new LoanAccountCreated(default, 1000, createdAt);
+        var @event = new Event<LoanAccountCreated>(loanAccountCreated);        
         var sut = new LoanAccountHistoryTransformation();
         
         var result = sut.Transform(@event);        
         
-        Assert.Equal($"Account has been created at: {@event.Timestamp} with initial limit of: {loanAccountCreated.IntialLimit}", result.Description);
+        Assert.Equal($"Account has been created at: {createdAt} with initial limit of: {loanAccountCreated.IntialLimit}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenMoneyDeposited_ShouldReturnAccountHistory()
     {
-        var moneyDeposited = new MoneyDeposited(default, 500);
-        var @event = new Event<MoneyDeposited>(moneyDeposited);
-        @event.Timestamp = DateTimeOffset.Now;
+        var transactionDate = DateTimeProvider.UtcNow;
+        var moneyDeposited = new MoneyDeposited(default, 500, transactionDate);
+        var @event = new Event<MoneyDeposited>(moneyDeposited);        
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"{moneyDeposited.Amount} has been deposited at: {@event.Timestamp}", result.Description);
+        Assert.Equal($"{moneyDeposited.Amount} has been deposited at: {transactionDate}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenMoneyWithdrawn_ShouldReturnAccountHistory()
     {
-        var moneyWithdrawn = new MoneyWithdrawn(default, 500);
-        var @event = new Event<MoneyWithdrawn>(moneyWithdrawn);
-        @event.Timestamp = DateTimeOffset.Now;
+        var transactionDate = DateTimeProvider.UtcNow;
+        var moneyWithdrawn = new MoneyWithdrawn(default, 500, transactionDate);
+        var @event = new Event<MoneyWithdrawn>(moneyWithdrawn);        
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"{moneyWithdrawn.Amount} has been withdrawn at: {@event.Timestamp}", result.Description);
+        Assert.Equal($"{moneyWithdrawn.Amount} has been withdrawn at: {transactionDate}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenAccountBlocked_ShouldReturnAccountHistory()
     {
-        var accountBlocked = new LoanAccountBlocked(default);
-        var @event = new Event<LoanAccountBlocked>(accountBlocked);
-        @event.Timestamp = DateTimeOffset.Now;
+        var blockedAt = DateTimeProvider.UtcNow;
+        var accountBlocked = new LoanAccountBlocked(default, blockedAt);
+        var @event = new Event<LoanAccountBlocked>(accountBlocked);        
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"Account has been blocked at: {@event.Timestamp}", result.Description);
+        Assert.Equal($"Account has been blocked at: {blockedAt}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenLimitIncreaseRequested_ShouldReturnAccountHistory()
     {
-        var limitIncreaseRequested = new LimitIncreaseRequested(default);
-        var @event = new Event<LimitIncreaseRequested>(limitIncreaseRequested);
-        @event.Timestamp = DateTimeOffset.Now;
+        var requestedAt = DateTimeProvider.UtcNow;
+        var limitIncreaseRequested = new LimitIncreaseRequested(default, requestedAt);
+        var @event = new Event<LimitIncreaseRequested>(limitIncreaseRequested);        
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"Limit increase has been requested at: {@event.Timestamp}", result.Description);
+        Assert.Equal($"Limit increase has been requested at: {requestedAt}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenLimitIncreaseGranted_ShouldReturnAccountHistory()
     {
-        var limitIncreaseGranted = new LimitIncreaseGranted(default, 500);
-        var @event = new Event<LimitIncreaseGranted>(limitIncreaseGranted);
-        @event.Timestamp = DateTimeOffset.Now;
+        var createdAt = DateTimeProvider.UtcNow;
+        var limitIncreaseGranted = new LimitIncreaseGranted(default, 500, createdAt);
+        var @event = new Event<LimitIncreaseGranted>(limitIncreaseGranted);        
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"Limit increase has been granted at: {@event.Timestamp} with increase of {limitIncreaseGranted.LimitIncreaseAmount}", result.Description);
+        Assert.Equal($"Limit increase has been granted at: {createdAt} with increase of {limitIncreaseGranted.LimitIncreaseAmount}", result.Description);
     }
 
     [Fact]
     public void Transform_WhenLimitIncreaseRejected_ShouldReturnAccountHistory()
     {
-        var limitIncreaseRejected = new LimitIncreaseRejected(default);
-        var @event = new Event<LimitIncreaseRejected>(limitIncreaseRejected);
-        @event.Timestamp = DateTimeOffset.Now;
+        var rejectedAt = DateTimeProvider.UtcNow;
+        var limitIncreaseRejected = new LimitIncreaseRejected(default, rejectedAt);
+        var @event = new Event<LimitIncreaseRejected>(limitIncreaseRejected);       
         var sut = new LoanAccountHistoryTransformation();
 
         var result = sut.Transform(@event);
 
-        Assert.Equal($"Limit increase has been rejected at: {@event.Timestamp}", result.Description);
+        Assert.Equal($"Limit increase has been rejected at: {rejectedAt}", result.Description);
     }
 }
