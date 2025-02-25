@@ -30,10 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="LoanAccount\Deposit\" />
     <Folder Include="LoanAccount\History\" />
-    <Folder Include="LoanAccount\Withdraw\" />
-    <Folder Include="Sanction\Translator\" />
   </ItemGroup>
 
 </Project>

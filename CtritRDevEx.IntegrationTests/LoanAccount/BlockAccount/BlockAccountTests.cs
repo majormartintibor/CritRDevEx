@@ -24,4 +24,14 @@ public class BlockAccountTests(AppFixture fixture) : IntegrationContext(fixture)
         Assert.NotNull(updated);
         Assert.Equal(LoanAccountStatus.Blocked, updated.AccountStatus);
     }
+
+    [Fact]
+    public async Task BlockingAnAlreadyBlockedAccountFails()
+    {
+        var accountId = CombGuidIdGeneration.NewGuid();
+        await Store.BlockedAccount(accountId);
+        BlockLoanAccount message = new(accountId);
+
+        _ = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _fixture.Host!.InvokeAsync(message));
+    }
 }
