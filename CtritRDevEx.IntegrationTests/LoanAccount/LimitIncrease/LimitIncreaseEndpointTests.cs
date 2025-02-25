@@ -5,7 +5,7 @@ using JasperFx.Core;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.LimitIncrease;
 
-public class LimitIncreaseTests(AppFixture fixture) : IntegrationContext(fixture)
+public class LimitIncreaseEndpointTests(AppFixture fixture) : IntegrationContext(fixture)
 {
     private readonly AppFixture _fixture = fixture;
 

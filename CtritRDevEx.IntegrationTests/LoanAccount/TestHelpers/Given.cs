@@ -1,6 +1,7 @@
 ﻿using CritRDevEx.API.Clock;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
+using CritRDevEx.API.LoanAccount.Deposit;
 using CritRDevEx.API.LoanAccount.LimitIncrease;
 using JasperFx.Core;
 using Marten;
@@ -62,6 +63,17 @@ internal static class Given
             LoanAccountCreated loanAccountCreated = new(CombGuidIdGeneration.NewGuid(), -30000, DateTimeProvider.UtcNow);
 
             _ = session.Events.StartStream<CritRDevEx.API.LoanAccount.LoanAccount>(accountId, loanAccountCreated);
+            await session.SaveChangesAsync();
+        }
+    }
+
+    public static async Task AddDeposit(this IDocumentStore store, Guid accointId, decimal amount)
+    {
+        using var session = store.LightweightSession();
+        {
+            MoneyDeposited moneyDeposited = new(accointId, amount, DateTimeProvider.UtcNow);
+
+            _ = session.Events.Append(accointId, moneyDeposited);
             await session.SaveChangesAsync();
         }
     }
