@@ -24,7 +24,7 @@ public class LimitIncreaseProcessTests(AppFixture fixture) : IntegrationContext(
         await Task.Delay(5000);        
 
         LoanAccountDetail expected = new(accountId, -40000, 100000, LoanAccountStatus.Default);        
-        LoanAccountDetail updated = await _fixture.Host!.LoanAccountDetailsShouldBe(expected);
+        LoanAccountDetail updated = await _fixture.Host!.GetLoanAccountDetails(expected.Id);
         Assert.NotNull(updated);
         Assert.Equal(expected, updated);
     }
