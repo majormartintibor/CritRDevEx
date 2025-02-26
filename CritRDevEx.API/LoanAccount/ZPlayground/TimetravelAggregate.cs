@@ -51,6 +51,7 @@ public static class Endpoint
         var version2 = await query.Events
             .QueryAllRawEvents()
             .Where(e => e.StreamId == loanAccountId && e.Version <= version)
+            //add more LINQ stuff here if you need
             .AggregateToAsync<LoanAccountDetail>() 
                 ?? new LoanAccountDetail();       
 
