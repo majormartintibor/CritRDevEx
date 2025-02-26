@@ -1,8 +1,6 @@
 ﻿using CritRDevEx.API.Clock;
-using CritRDevEx.API.LoanAccount.Details;
 using FluentValidation;
 using Marten;
-using Marten.Events;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine.Attributes;
 using Wolverine.Http;
