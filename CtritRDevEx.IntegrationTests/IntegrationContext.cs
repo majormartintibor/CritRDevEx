@@ -1,5 +1,6 @@
 ﻿using Alba;
 using Marten;
+using Marten.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Wolverine.Runtime;
 using Wolverine.Tracking;
@@ -20,13 +21,14 @@ public abstract class IntegrationContext : IAsyncLifetime
     public WolverineRuntime Runtime { get; }
 
     public IAlbaHost Host => _fixture.Host!;
-    public IDocumentStore Store => _fixture.Host!.Services.GetRequiredService<IDocumentStore>();
+    public DocumentStore Store => (DocumentStore)_fixture.Host!.Services.GetRequiredService<IDocumentStore>();
 
     public virtual async Task InitializeAsync()
     {
         // Using Marten, wipe out all data and reset the state
         // back to exactly what we described in InitialAccountData
-        await Store.Advanced.ResetAllData();
+        //await Store.Advanced.ResetAllData();
+        await ResetAllDataAsync();
     }
 
     // This is required because of the IAsyncLifetime
@@ -37,6 +39,7 @@ public abstract class IntegrationContext : IAsyncLifetime
         return Task.CompletedTask;
     }
 
+    //can be removed?
     public Task<IScenarioResult> Scenario(Action<Scenario> configure)
     {
         return Host.Scenario(configure);
@@ -62,4 +65,12 @@ public abstract class IntegrationContext : IAsyncLifetime
 
         return (tracked, result);
     }
+
+    private async Task ResetAllDataAsync(CancellationToken cancellation = default(CancellationToken))
+    {
+        foreach (IMartenDatabase database in (await Store.Tenancy.BuildDatabases()).OfType<IMartenDatabase>())
+        {
+            await database.DeleteAllDocumentsAsync(cancellation);           
+        }
+    }    
 }

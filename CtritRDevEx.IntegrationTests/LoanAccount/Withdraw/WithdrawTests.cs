@@ -2,6 +2,8 @@
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using JasperFx.Core;
+using CtritRDevEx.IntegrationTests.TestHelpers;
+using Marten.Events;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.Withdraw;
 
@@ -29,6 +31,7 @@ public class WithdrawTests(AppFixture fixture) : IntegrationContext(fixture)
 
         _ = await _fixture.Host!.SendWithdrawRequest(accountId, amount);
 
+        await _fixture.Host!.WaitForNonStaleProjectionDataAsync(Wait.ForAsyncProjectionUpdateTime);
         var updated = await _fixture.Host!.GetLoanAccountDetails(accountId);
         Assert.Equal(-5000, updated.Balance);
     }

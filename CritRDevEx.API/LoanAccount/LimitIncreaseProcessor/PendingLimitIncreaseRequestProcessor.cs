@@ -33,14 +33,15 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
             //invoke vs send:
             //send is fire and forget
             //invoke is fire and wait for response
-            //we want to wait for the completion of the command handling
-            //this is in-process communication, GOF mediator pattern
+            //we want to wait for the completion of the command handling           
             await _bus.InvokeAsync(command);
         }
     }
 
     private static async Task<decimal> GetLifetimeDepositAmount(Guid loanAccountId, IQuerySession session)
     {
+        //should work fine if closing the books pattern is implemented
+        //needs adjustment if snapshotting is used
         var totalAmount = await session.Events.QueryRawEventDataOnly<MoneyDeposited>()
                                               .Where(e => e.LoanAccountId == loanAccountId)
                                               .SumAsync(e => e.Amount);

@@ -1,7 +1,9 @@
 ﻿using Alba;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
+using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
+using Marten.Events;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.Deposit;
 
@@ -28,9 +30,9 @@ public class DepositTests(AppFixture fixture) : IntegrationContext(fixture)
         await Store.AccountWithLastLimitEvaluationDateYoungerThanThirtyDaysExist(accountId);
 
         _ = await _fixture.Host!.SendDepositRequest(accountId, amount);
-       
+                
+        await _fixture.Host!.WaitForNonStaleProjectionDataAsync(Wait.ForAsyncProjectionUpdateTime);
         var updated = await _fixture.Host!.GetLoanAccountDetails(accountId);
-
         Assert.NotNull(updated);
         Assert.Equal(amount, updated.Balance);
     }

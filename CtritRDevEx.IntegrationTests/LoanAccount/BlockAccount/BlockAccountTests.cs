@@ -1,7 +1,9 @@
 ﻿using CritRDevEx.API.LoanAccount;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
+using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
+using Marten.Events;
 using Wolverine;
 using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
 
@@ -20,6 +22,7 @@ public class BlockAccountTests(AppFixture fixture) : IntegrationContext(fixture)
 
         await _fixture.Host!.InvokeAsync(message);
 
+        await _fixture.Host!.WaitForNonStaleProjectionDataAsync(Wait.ForAsyncProjectionUpdateTime);
         var updated = await _fixture.Host!.GetLoanAccountDetails(accountId);
         Assert.NotNull(updated);
         Assert.Equal(LoanAccountStatus.Blocked, updated.AccountStatus);

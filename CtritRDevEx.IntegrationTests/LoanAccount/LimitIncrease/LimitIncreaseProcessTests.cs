@@ -2,7 +2,9 @@
 using CritRDevEx.API.LoanAccount.Details;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
+using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
+using Marten.Events;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.LimitIncrease;
 
@@ -20,9 +22,9 @@ public class LimitIncreaseProcessTests(AppFixture fixture) : IntegrationContext(
 
         _ = await _fixture.Host!.SendLimitIncreaseRequest(accountId);
 
-        //make this more sophisticated
-        await Task.Delay(5000);        
-
+        //could be more sophisticated, e.g: polling if the event exists
+        await Task.Delay(Wait.ForProcessorCycle);
+        await _fixture.Host!.WaitForNonStaleProjectionDataAsync(Wait.ForAsyncProjectionUpdateTime);
         LoanAccountDetail expected = new(accountId, -40000, 100000, LoanAccountStatus.Default);        
         LoanAccountDetail updated = await _fixture.Host!.GetLoanAccountDetails(expected.Id);
         Assert.NotNull(updated);
