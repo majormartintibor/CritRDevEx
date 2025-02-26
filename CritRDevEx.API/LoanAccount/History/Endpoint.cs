@@ -1,5 +1,4 @@
 ﻿using Marten;
-using Marten.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine.Http;
 
@@ -11,9 +10,9 @@ public static class Endpoint
 
     [Tags(Tag.LoanAccount)]
     [WolverineGet(GetAccountHistoryEndpoint + "{loanAccountId:guid}")]
-    public static Task GetInspection(
+    public static Task<IReadOnlyList<LoanAccountHistory>> GetInspection(
         [FromRoute] Guid loanAccountId, 
         IQuerySession querySession, 
-        HttpContext context)
-            => querySession.Json.WriteById<LoanAccountHistory>(loanAccountId, context);
+        CancellationToken ct)
+            => querySession.Query<LoanAccountHistory>().Where(a => a.LoanAccountId == loanAccountId).ToListAsync(ct);
 }
