@@ -28,10 +28,10 @@ public static class Endpoint
         }
     }
 
-    public const string TimetravelAggregateEndpoint = "/api/loanAccount/teststuff/";
+    public const string TimetravelEndpoint = "/api/loanAccount/teststuff/";
 
     [Tags(Tag.LoanAccount)]
-    [WolverineGet(TimetravelAggregateEndpoint + "{loanAccountId:guid}/{version:int}")]
+    [WolverineGet(TimetravelEndpoint + "{loanAccountId:guid}/{version:int}")]
     public static async Task<IResult> TimeTravelAccountDetail(
         [FromRoute] Guid loanAccountId,
         [FromRoute] int version,        
