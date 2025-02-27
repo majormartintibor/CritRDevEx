@@ -5,6 +5,7 @@
 3. extra: hogyan modelleznéd az elõtörlesztési díjat és a késedelmi kamatot?
 4. Az accountnak jelenleg nincs számlavezetési díja. Hogyan modelleznéd ezt a tulajdonságot?
 5. A blocked vizsgálat kiszervezése a handlerekbõl, minden loan accountot érintõ hívásra fusson le.
+5. extra: megvizsgálni, hogy az 5.-nak mi az esetleges hátránya, mi volt az eredeti megoldás elõnye.
 6. Reporting funkció: találj ki, modellez le majd implementál egy report funkcionalitást, ami több streambõl veszi az adatot.
 
 1000. Bármi más, ami eszedbe jut :)

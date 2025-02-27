@@ -1,5 +1,4 @@
-﻿using CritRDevEx.API.Clock;
-using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
+﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
 using CritRDevEx.API.LoanAccount.Deposit;
@@ -10,7 +9,7 @@ using Marten.Events.Aggregation;
 
 namespace CritRDevEx.API.LoanAccount;
 
-//Decision model for the account stream
+//Decision model for the account stream aka Aggregate
 public sealed record LoanAccount(
     Guid Id,
     Guid DebtorId,

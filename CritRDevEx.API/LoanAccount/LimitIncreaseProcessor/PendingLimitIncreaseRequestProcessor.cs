@@ -42,10 +42,28 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
     {
         //should work fine if closing the books pattern is implemented
         //needs adjustment if snapshotting is used
-        var totalAmount = await session.Events.QueryRawEventDataOnly<MoneyDeposited>()
-                                              .Where(e => e.LoanAccountId == loanAccountId)
-                                              .SumAsync(e => e.Amount);
+        //var totalAmount = await session.Events.QueryRawEventDataOnly<MoneyDeposited>()
+        //                                      .Where(e => e.LoanAccountId == loanAccountId)
+        //                                      .SumAsync(e => e.Amount);
 
-        return totalAmount;
+        //this should be more efficient than the code above
+        var lifetimeAccountDeposit = await session.Events.AggregateStreamAsync<LifetimeAccountDeposit>(loanAccountId);
+
+        return lifetimeAccountDeposit is null ? 0 : lifetimeAccountDeposit!.Amount;
+    }
+
+    public sealed record LifetimeAccountDeposit(Guid Id, decimal Amount)
+    {
+        public LifetimeAccountDeposit() : this(Guid.Empty, 0)
+        {
+        }
+
+        public LifetimeAccountDeposit Apply(LoanAccountEvent @event) =>
+        @event switch
+        {
+            MoneyDeposited(Guid, decimal amount, DateTimeOffset) => 
+                this with { Amount = Amount + amount},
+            _ => this
+        };
     }
 }

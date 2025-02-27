@@ -12,10 +12,11 @@ public sealed record LoanAccountDetail(
         Guid Id,
         decimal Limit,
         decimal Balance,
-        LoanAccountStatus AccountStatus)
+        LoanAccountStatus AccountStatus,
+        DateTimeOffset LastLimitEvaluationDate)
 {
     public LoanAccountDetail() 
-        : this(Guid.Empty, default, default, LoanAccountStatus.Default)
+        : this(Guid.Empty, default, default, LoanAccountStatus.Default, DateTimeOffset.MinValue)
     {
     }
 
@@ -30,8 +31,10 @@ public sealed record LoanAccountDetail(
                 this with { Balance = Balance - amount },
             LoanAccountBlocked(Guid, DateTimeOffset) =>
                 this with { AccountStatus = LoanAccountStatus.Blocked },
-            LimitIncreaseGranted(Guid, decimal limitIncreaseAmount, DateTimeOffset) =>
-                this with { Limit = Limit - limitIncreaseAmount },
+            LimitIncreaseGranted(Guid, decimal limitIncreaseAmount, DateTimeOffset grantedAt) =>
+                this with { Limit = Limit - limitIncreaseAmount, LastLimitEvaluationDate = grantedAt },
+            LimitIncreaseRejected(Guid, DateTimeOffset rejectedAt) =>
+                this with { LastLimitEvaluationDate = rejectedAt },
             _ => this
         };
 }

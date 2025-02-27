@@ -37,8 +37,7 @@ public static class Endpoint
 
         if (account.HasPendingLimitIncreaseRequest)
             throw new InvalidOperationException("Limit increase request is already pending");
-
-        //how did copilot know this rule?
+       
         if (account.LastLimitEvaluationDate > DateTimeOffset.UtcNow.AddDays(-30))
             throw new InvalidOperationException("Limit increase can be requested only once in 30 days");
 

@@ -1,4 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount;
+﻿using CritRDevEx.API.Clock;
+using CritRDevEx.API.LoanAccount;
 using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
 using CritRDevEx.API.LoanAccount.BlockAccount;
 using CritRDevEx.API.LoanAccount.CreateAccount;
@@ -81,5 +82,35 @@ public class LoanAccountDetailTests
         var updatedAccountDetail = initialAccountDetail.Apply(@event);
 
         Assert.Equal(initialLimit - limitIncreaseAmount, updatedAccountDetail.Limit);
+    }
+
+    [Fact]
+    public void Apply_WhenLimitIncreaseGrantedEvent_ShouldReturnAccountDetailWithLastLimitEvaluationDate()
+    {
+        var now = DateTimeProvider.UtcNow;
+
+        var initialAccountDetail = new LoanAccountDetail();
+        var initialLimit = -30000m;
+        var limitIncreaseGranted = new LimitIncreaseGranted(default, default, now);
+        var @event = new Event<LoanAccountEvent>(limitIncreaseGranted);
+        initialAccountDetail = initialAccountDetail with { Limit = initialLimit };
+
+        var updatedAccountDetail = initialAccountDetail.Apply(@event);
+
+        Assert.Equal(now, updatedAccountDetail.LastLimitEvaluationDate);
+    }
+
+    [Fact]
+    public void Apply_WhenLimitIncreaseRejectedEvent_ShouldReturnAccountDetailWithLastLimitEvaluationDate()
+    {
+        var now = DateTimeProvider.UtcNow;
+
+        var initialAccountDetail = new LoanAccountDetail();       
+        var limitIncreaseRejected = new LimitIncreaseRejected(default, now);
+        var @event = new Event<LoanAccountEvent>(limitIncreaseRejected);        
+
+        var updatedAccountDetail = initialAccountDetail.Apply(@event);
+
+        Assert.Equal(now, updatedAccountDetail.LastLimitEvaluationDate);
     }
 }

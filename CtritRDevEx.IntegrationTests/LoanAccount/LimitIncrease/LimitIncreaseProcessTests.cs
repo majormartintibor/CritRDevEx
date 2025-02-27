@@ -25,9 +25,10 @@ public class LimitIncreaseProcessTests(AppFixture fixture) : IntegrationContext(
         //could be more sophisticated, e.g: polling if the event exists
         await Task.Delay(Wait.ForProcessorCycle);
         await _fixture.Host!.WaitForNonStaleProjectionDataAsync(Wait.ForAsyncProjectionUpdateTime);
-        LoanAccountDetail expected = new(accountId, -40000, 100000, LoanAccountStatus.Default);        
+        LoanAccountDetail expected = new(accountId, -40000, 100000, LoanAccountStatus.Default, DateTimeOffset.MinValue);        
         LoanAccountDetail updated = await _fixture.Host!.GetLoanAccountDetails(expected.Id);
         Assert.NotNull(updated);
-        Assert.Equal(expected, updated);
+        Assert.Equal(expected.Limit, updated.Limit);
+        Assert.NotEqual(expected.LastLimitEvaluationDate, updated.LastLimitEvaluationDate);
     }
 }
