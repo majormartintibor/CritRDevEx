@@ -47,18 +47,18 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
         //                                      .SumAsync(e => e.Amount);
 
         //this should be more efficient than the code above
-        var lifetimeAccountDeposit = await session.Events.AggregateStreamAsync<LifetimeAccountDeposit>(loanAccountId);
+        var totalLifetimeDeposits = await session.Events.AggregateStreamAsync<TotalLifetimeDeposits>(loanAccountId);
 
-        return lifetimeAccountDeposit is null ? 0 : lifetimeAccountDeposit!.Amount;
+        return totalLifetimeDeposits is null ? 0 : totalLifetimeDeposits!.Amount;
     }
 
-    public sealed record LifetimeAccountDeposit(Guid Id, decimal Amount)
+    public sealed record TotalLifetimeDeposits(Guid Id, decimal Amount)
     {
-        public LifetimeAccountDeposit() : this(Guid.Empty, 0)
+        public TotalLifetimeDeposits() : this(Guid.Empty, 0)
         {
         }
 
-        public LifetimeAccountDeposit Apply(LoanAccountEvent @event) =>
+        public TotalLifetimeDeposits Apply(LoanAccountEvent @event) =>
         @event switch
         {
             MoneyDeposited(Guid, decimal amount, DateTimeOffset) => 
