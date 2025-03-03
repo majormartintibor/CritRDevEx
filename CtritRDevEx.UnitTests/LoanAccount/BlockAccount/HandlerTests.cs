@@ -1,6 +1,6 @@
 ﻿using CritRDevEx.API.LoanAccount;
-using CritRDevEx.API.LoanAccount.BlockAccount;
-using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
+using CritRDevEx.API.LoanAccount.LoanAccountEvents;
+using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountHandler;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.BlockAccount;
 
@@ -10,7 +10,7 @@ public class HandlerTests
     public void BlockAccountEmitsAccountBlocked()
     {
         BlockLoanAccount request = new(default);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (events, _) = Handle(request, account);
 
@@ -22,7 +22,7 @@ public class HandlerTests
     public void BlockAccountEmitsNoOutgoingMessages()
     {
         BlockLoanAccount request = new(default);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (_, outgoingMessages) = Handle(request, account);
 
@@ -34,7 +34,7 @@ public class HandlerTests
     {
         BlockLoanAccount request = new(default);
 
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => Handle(request, account));
     }

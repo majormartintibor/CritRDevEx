@@ -1,7 +1,7 @@
 ﻿using CritRDevEx.API.LoanAccount;
-using CritRDevEx.API.LoanAccount.Deposit;
+using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using Microsoft.AspNetCore.Http.HttpResults;
-using static CritRDevEx.API.LoanAccount.Deposit.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.Deposit.Endpoint;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.Deposit;
 
@@ -11,7 +11,7 @@ public class EndpointTests
     public void DepositSucceeds()
     {
         DepositToLoanAccount request = new(default, 100);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (result, _, _) = DepositToAccount(request, account);
 
@@ -22,7 +22,7 @@ public class EndpointTests
     public void DepositEmitsMoneyDeposited()
     {
         DepositToLoanAccount request = new(default, 100);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
         
         var (_, events, _) = DepositToAccount(request, account);
 
@@ -34,7 +34,7 @@ public class EndpointTests
     public void DepositEmitsNoOutgoingMessages()
     {
         DepositToLoanAccount request = new(default, 100);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
         var (_, _, outgoingMessages) = DepositToAccount(request, account);
 
@@ -45,7 +45,7 @@ public class EndpointTests
     public void CannotDepositToBlockedAccount()
     {
         DepositToLoanAccount request = new(default, 100);
-        CritRDevEx.API.LoanAccount.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
+        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 
         Assert.Throws<InvalidOperationException>(() => DepositToAccount(request, account));
     }

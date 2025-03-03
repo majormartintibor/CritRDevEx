@@ -5,7 +5,7 @@ using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
 using Marten.Events;
 using Wolverine;
-using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
+using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountHandler;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.BlockAccount;
 

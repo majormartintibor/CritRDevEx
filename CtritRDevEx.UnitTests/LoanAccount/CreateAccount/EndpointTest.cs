@@ -1,6 +1,6 @@
-﻿using CritRDevEx.API.LoanAccount.CreateAccount;
+﻿using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using Microsoft.AspNetCore.Http.HttpResults;
-using static CritRDevEx.API.LoanAccount.CreateAccount.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.CreateAccount.Endpoint;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.CreateAccount;
 

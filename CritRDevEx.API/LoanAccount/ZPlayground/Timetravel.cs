@@ -1,4 +1,4 @@
-﻿using CritRDevEx.API.LoanAccount.Details;
+﻿using CritRDevEx.API.LoanAccount.Read.Details;
 using FluentValidation;
 using Marten;
 using Marten.Events;

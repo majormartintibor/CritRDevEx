@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.Deposit.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.Deposit.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 internal static class Deposit

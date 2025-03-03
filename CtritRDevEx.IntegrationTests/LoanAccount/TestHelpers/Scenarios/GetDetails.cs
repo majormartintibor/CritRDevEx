@@ -1,5 +1,5 @@
 ﻿using Alba;
-using CritRDevEx.API.LoanAccount.Details;
+using CritRDevEx.API.LoanAccount.Read.Details;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 internal static class GetDetails

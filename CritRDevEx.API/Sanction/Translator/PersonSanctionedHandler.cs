@@ -1,6 +1,6 @@
 ﻿using CritRDevEx.API.Contracts.Sanction;
 using Wolverine;
-using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
+using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountHandler;
 
 namespace CritRDevEx.API.Sanction.Translator;
 

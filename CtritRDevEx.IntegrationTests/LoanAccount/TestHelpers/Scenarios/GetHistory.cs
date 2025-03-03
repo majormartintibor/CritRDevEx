@@ -1,5 +1,5 @@
 ﻿using Alba;
-using CritRDevEx.API.LoanAccount.History;
+using CritRDevEx.API.LoanAccount.Read.History;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 

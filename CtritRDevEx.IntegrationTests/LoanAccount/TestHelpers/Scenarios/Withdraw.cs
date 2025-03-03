@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.Withdraw.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.Withdraw.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 

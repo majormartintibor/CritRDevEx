@@ -1,5 +1,5 @@
 ﻿using CritRDevEx.API.LoanAccount;
-using CritRDevEx.API.LoanAccount.Details;
+using CritRDevEx.API.LoanAccount.Read.Details;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 using CtritRDevEx.IntegrationTests.TestHelpers;

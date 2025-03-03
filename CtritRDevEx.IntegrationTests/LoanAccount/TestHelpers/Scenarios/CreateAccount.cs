@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.CreateAccount.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.CreateAccount.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 
