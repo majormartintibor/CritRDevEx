@@ -10,11 +10,11 @@ namespace CritRDevEx.API.LoanAccount.Write.LimitIncrease;
 
 public static class Endpoint
 {
-    public sealed record RequestLimitIncrease(Guid LoanAccountId)
+    public sealed record RequestLimitIncreaseCommand(Guid LoanAccountId)
     {
-        public sealed class RequestLimitIncreaseValidator : AbstractValidator<RequestLimitIncrease>
+        public sealed class RequestLimitIncreaseCommandValidator : AbstractValidator<RequestLimitIncreaseCommand>
         {
-            public RequestLimitIncreaseValidator()
+            public RequestLimitIncreaseCommandValidator()
             {
                 RuleFor(x => x.LoanAccountId).NotEmpty();
             }
@@ -27,7 +27,7 @@ public static class Endpoint
     [WolverinePost(RequestLimitIncreaseEndpoint)]
     [AggregateHandler]
     public static (IResult, Events, OutgoingMessages) ReceiveLimitIncreaseRequest(
-        RequestLimitIncrease request,
+        RequestLimitIncreaseCommand command,
         [Required] LoanAccount account)
     {
         Events events = [];
@@ -42,7 +42,7 @@ public static class Endpoint
         if (account.LastLimitEvaluationDate > DateTimeOffset.UtcNow.AddDays(-30))
             throw new InvalidOperationException("Limit increase can be requested only once in 30 days");
 
-        events.Add(new LimitIncreaseRequested(request.LoanAccountId, DateTimeProvider.UtcNow));
+        events.Add(new LimitIncreaseRequested(command.LoanAccountId, DateTimeProvider.UtcNow));
         return (Results.Ok(), events, messages);
     }
 }

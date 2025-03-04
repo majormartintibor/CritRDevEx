@@ -10,10 +10,10 @@ public class EndpointTests
     [Fact]
     public void DepositSucceeds()
     {
-        DepositToLoanAccount request = new(default, 100);
+        DepositToLoanAccountCommand command = new(default, 100);
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
-        var (result, _, _) = DepositToAccount(request, account);
+        var (result, _, _) = DepositToAccount(command, account);
 
         Assert.IsType<Ok>(result);
     }
@@ -21,10 +21,10 @@ public class EndpointTests
     [Fact]
     public void DepositEmitsMoneyDeposited()
     {
-        DepositToLoanAccount request = new(default, 100);
+        DepositToLoanAccountCommand command = new(default, 100);
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
         
-        var (_, events, _) = DepositToAccount(request, account);
+        var (_, events, _) = DepositToAccount(command, account);
 
         Assert.Single(events);
         Assert.IsType<MoneyDeposited>(events[0]);
@@ -33,10 +33,10 @@ public class EndpointTests
     [Fact]
     public void DepositEmitsNoOutgoingMessages()
     {
-        DepositToLoanAccount request = new(default, 100);
+        DepositToLoanAccountCommand command = new(default, 100);
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Default, default);
 
-        var (_, _, outgoingMessages) = DepositToAccount(request, account);
+        var (_, _, outgoingMessages) = DepositToAccount(command, account);
 
         Assert.Empty(outgoingMessages);
     }
@@ -44,9 +44,9 @@ public class EndpointTests
     [Fact]
     public void CannotDepositToBlockedAccount()
     {
-        DepositToLoanAccount request = new(default, 100);
+        DepositToLoanAccountCommand command = new(default, 100);
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 
-        Assert.Throws<InvalidOperationException>(() => DepositToAccount(request, account));
+        Assert.Throws<InvalidOperationException>(() => DepositToAccount(command, account));
     }
 }

@@ -12,9 +12,9 @@ public class EndpointTests
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Blocked, default);
 
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
 
-        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(request, account));
+        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(command, account));
     }
 
     [Fact]
@@ -22,27 +22,27 @@ public class EndpointTests
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Default, default);
         account = account with { HasPendingLimitIncreaseRequest = true };
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
         
-        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(request, account));
+        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(command, account));
     }
 
     [Fact]
     public void ReceiveLimitIncreaseRequest_WhenLastLimitEvaluationDateIsWithin30Days_ThrowsInvalidOperationException()
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Default, DateTimeOffset.UtcNow.AddDays(-29));
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
 
-        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(request, account));
+        Assert.Throws<InvalidOperationException>(() => ReceiveLimitIncreaseRequest(command, account));
     }
 
     [Fact]
     public void ReceiveLimitIncreaseRequest_WhenAllConditionsAreMet_ReturnsOkResult()
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Default, DateTimeOffset.UtcNow.AddDays(-31));
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
 
-        var (result, _, _) = ReceiveLimitIncreaseRequest(request, account);
+        var (result, _, _) = ReceiveLimitIncreaseRequest(command, account);
 
         Assert.IsType<Ok>(result);
     }
@@ -51,9 +51,9 @@ public class EndpointTests
     public void ReceiveLimitIncreaseRequest_WhenAllConditionsAreMet_ReturnsLimitIncreaseRequestedEvent()
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Default, DateTimeOffset.UtcNow.AddDays(-31));
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
 
-        var (_, events, _) = ReceiveLimitIncreaseRequest(request, account);
+        var (_, events, _) = ReceiveLimitIncreaseRequest(command, account);
 
         Assert.Single(events);
         Assert.IsType<LimitIncreaseRequested>(events[0]);
@@ -63,9 +63,9 @@ public class EndpointTests
     public void ReceiveLimitIncreaseRequest_WhenAllConditionsAreMet_ReturnsNoOutgoingMessages()
     {
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, default, default, LoanAccountStatus.Default, DateTimeOffset.UtcNow.AddDays(-31));
-        var request = new RequestLimitIncrease(default);
+        var command = new RequestLimitIncreaseCommand(default);
 
-        var (_, _, outgoingMessages) = ReceiveLimitIncreaseRequest(request, account);
+        var (_, _, outgoingMessages) = ReceiveLimitIncreaseRequest(command, account);
 
         Assert.Empty(outgoingMessages);
     }

@@ -10,11 +10,11 @@ namespace CritRDevEx.API.LoanAccount.Write.Deposit;
 
 public static class Endpoint
 {
-    public sealed record DepositToLoanAccount(Guid LoanAccountId, decimal Amount)
+    public sealed record DepositToLoanAccountCommand(Guid LoanAccountId, decimal Amount)
     {
-        public sealed class DepositLoanAccountValidator : AbstractValidator<DepositToLoanAccount>
+        public sealed class DepositLoanAccountCommandValidator : AbstractValidator<DepositToLoanAccountCommand>
         {
-            public DepositLoanAccountValidator()
+            public DepositLoanAccountCommandValidator()
             {
                 RuleFor(x => x.LoanAccountId).NotEmpty();
                 RuleFor(x => x.Amount).GreaterThan(0);
@@ -28,7 +28,7 @@ public static class Endpoint
     [WolverinePost(DepositToLoanAccountEndpoint)]
     [AggregateHandler]
     public static (IResult, Events, OutgoingMessages) DepositToAccount(
-        DepositToLoanAccount request,
+        DepositToLoanAccountCommand command,
         [Required] LoanAccount account)
     {
         Events events = [];
@@ -37,7 +37,7 @@ public static class Endpoint
         if (account.AccountStatus == LoanAccountStatus.Blocked)
             throw new InvalidOperationException("Account is blocked");
 
-        events.Add(new MoneyDeposited(request.LoanAccountId, request.Amount, DateTimeProvider.UtcNow));
+        events.Add(new MoneyDeposited(command.LoanAccountId, command.Amount, DateTimeProvider.UtcNow));
 
         return (Results.Ok(), events, messages);
     }

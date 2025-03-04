@@ -29,7 +29,7 @@ public class PendingLimitIncreaseRequestProcessor(IDocumentStore documentStore, 
         {
             var lifetimeDeposit = await GetLifetimeDepositAmount(request.Id, session);
 
-            var command = new AuditLimitIncreaseRequestHandler.AuditLimitIncreaseRequest(request.Id, lifetimeDeposit);
+            var command = new AuditLimitIncreaseCommandHandler.AuditLimitIncreaseCommand(request.Id, lifetimeDeposit);
             //invoke vs send:
             //send is fire and forget
             //invoke is fire and wait for response

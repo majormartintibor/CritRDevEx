@@ -5,7 +5,7 @@ using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
 using Marten.Events;
 using Wolverine;
-using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountHandler;
+using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountCommandHandler;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.BlockAccount;
 
@@ -18,7 +18,7 @@ public class BlockAccountTests(AppFixture fixture) : IntegrationContext(fixture)
     {
         var accountId = CombGuidIdGeneration.NewGuid();
         await Store.AccountWithLastLimitEvaluationDateYoungerThanThirtyDaysExist(accountId);
-        BlockLoanAccount message = new(accountId);
+        BlockLoanAccountCommand message = new(accountId);
 
         await _fixture.Host!.InvokeAsync(message);
 
@@ -33,7 +33,7 @@ public class BlockAccountTests(AppFixture fixture) : IntegrationContext(fixture)
     {
         var accountId = CombGuidIdGeneration.NewGuid();
         await Store.BlockedAccount(accountId);
-        BlockLoanAccount message = new(accountId);
+        BlockLoanAccountCommand message = new(accountId);
 
         _ = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _fixture.Host!.InvokeAsync(message));
     }

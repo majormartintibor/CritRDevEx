@@ -7,13 +7,13 @@ using Wolverine.Marten;
 
 namespace CritRDevEx.API.LoanAccount.Write.BlockAccount;
 
-public static class BlockLoanAccountHandler
+public static class BlockLoanAccountCommandHandler
 {
-    public sealed record BlockLoanAccount(Guid LoanAccountId)
+    public sealed record BlockLoanAccountCommand(Guid LoanAccountId)
     {
-        public sealed class BlockLoanAccountValidator : AbstractValidator<BlockLoanAccount>
+        public sealed class BlockLoanAccountCommandValidator : AbstractValidator<BlockLoanAccountCommand>
         {
-            public BlockLoanAccountValidator()
+            public BlockLoanAccountCommandValidator()
             {
                 RuleFor(x => x.LoanAccountId).NotEmpty();
             }
@@ -22,7 +22,7 @@ public static class BlockLoanAccountHandler
 
     [AggregateHandler]
     public static (Events, OutgoingMessages) Handle(
-        BlockLoanAccount request,
+        BlockLoanAccountCommand command,
         [Required] LoanAccount account)
     {
         Events events = [];
@@ -31,7 +31,7 @@ public static class BlockLoanAccountHandler
         if (account.AccountStatus == LoanAccountStatus.Blocked)
             throw new InvalidOperationException("Account is already blocked");
 
-        events.Add(new LoanAccountBlocked(request.LoanAccountId, DateTimeProvider.UtcNow));
+        events.Add(new LoanAccountBlocked(command.LoanAccountId, DateTimeProvider.UtcNow));
 
         return (events, messages);
     }

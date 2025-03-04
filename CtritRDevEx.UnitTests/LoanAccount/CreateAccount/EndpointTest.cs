@@ -9,9 +9,9 @@ public class EndpointTest
     [Fact]
     public void CreateAnAccountSucceeds()
     {
-        CreateLoanAccount request = new(default);
+        CreateLoanAccountCommand command = new(default);
 
-        var (result, _) = CreateNewAccount(request);
+        var (result, _) = CreateNewAccount(command);
 
         var okResult = Assert.IsType<Ok<Guid>>(result);
         Assert.IsType<Guid>(okResult.Value);
@@ -20,9 +20,9 @@ public class EndpointTest
     [Fact]
     public void CreateAnAccountStartsStream()
     {
-        CreateLoanAccount request = new(default);
+        CreateLoanAccountCommand command = new(default);
 
-        var (_, stream) = CreateNewAccount(request);
+        var (_, stream) = CreateNewAccount(command);
 
         Assert.IsType<LoanAccountCreated>(stream.Events.Single());
     }

@@ -12,7 +12,7 @@ internal static class Withdraw
             api.Scenario(x =>
             {
                 x.Post.Url(WithdrawFromLoanAccountEndpoint);
-                x.Post.Json(new WithdrawFromLoanAccount(accountId, amount));
+                x.Post.Json(new WithdrawFromLoanAccountCommand(accountId, amount));
 
                 x.IgnoreStatusCode();
             });

@@ -7,13 +7,13 @@ using Wolverine.Marten;
 
 namespace CritRDevEx.API.LoanAccount.Write.AuditLimitIncreaseRequest;
 
-public static class AuditLimitIncreaseRequestHandler
+public static class AuditLimitIncreaseCommandHandler
 {
-    public sealed record AuditLimitIncreaseRequest(Guid LoanAccountId, decimal LifetimeDeposits)
+    public sealed record AuditLimitIncreaseCommand(Guid LoanAccountId, decimal LifetimeDeposits)
     {
-        public sealed class AuditLimitIncreaseRequestValidator : AbstractValidator<AuditLimitIncreaseRequest>
+        public sealed class AuditLimitIncreaseCommandValidator : AbstractValidator<AuditLimitIncreaseCommand>
         {
-            public AuditLimitIncreaseRequestValidator()
+            public AuditLimitIncreaseCommandValidator()
             {
                 RuleFor(x => x.LoanAccountId).NotEmpty();
                 RuleFor(x => x.LifetimeDeposits).GreaterThanOrEqualTo(0);
@@ -23,7 +23,7 @@ public static class AuditLimitIncreaseRequestHandler
 
     [AggregateHandler]
     public static (Events, OutgoingMessages) Handle(
-    AuditLimitIncreaseRequest request,
+    AuditLimitIncreaseCommand command,
     [Required] LoanAccount account)
     {
         var events = new Events();
@@ -31,7 +31,7 @@ public static class AuditLimitIncreaseRequestHandler
 
         var eventType =
             account.AccountStatus == LoanAccountStatus.Blocked
-            || request.LifetimeDeposits < Math.Abs(account.Limit) * 3
+            || command.LifetimeDeposits < Math.Abs(account.Limit) * 3
                 ? typeof(LimitIncreaseRejected)
                 : typeof(LimitIncreaseGranted);
 

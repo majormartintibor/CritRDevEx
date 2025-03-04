@@ -11,7 +11,7 @@ internal static class IncreaseLimit
             api.Scenario(x =>
             {
                 x.Post.Url(RequestLimitIncreaseEndpoint);
-                x.Post.Json(new RequestLimitIncrease(accountId));
+                x.Post.Json(new RequestLimitIncreaseCommand(accountId));
 
                 x.IgnoreStatusCode();
             });

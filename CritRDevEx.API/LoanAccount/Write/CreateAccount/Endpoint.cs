@@ -11,11 +11,11 @@ namespace CritRDevEx.API.LoanAccount.Write.CreateAccount;
 
 public static class Endpoint
 {
-    public sealed record CreateLoanAccount(Guid DebtorId)
+    public sealed record CreateLoanAccountCommand(Guid DebtorId)
     {
-        public sealed class CreateLoanAccountValidator : AbstractValidator<CreateLoanAccount>
+        public sealed class CreateLoanAccountCommandValidator : AbstractValidator<CreateLoanAccountCommand>
         {
-            public CreateLoanAccountValidator()
+            public CreateLoanAccountCommandValidator()
             {
                 RuleFor(x => x.DebtorId).NotEmpty();
             }
@@ -24,11 +24,11 @@ public static class Endpoint
 
     [WolverineBefore]
     public static async Task<ProblemDetails> CheckIfDebtorAlreadyHasAnAccount(
-        CreateLoanAccount request,
+        CreateLoanAccountCommand command,
         IDocumentSession session)
     {
         var hasExistingAccount = await session.Events.QueryRawEventDataOnly<LoanAccountCreated>()
-            .AnyAsync(e => e.DebtorId == request.DebtorId);
+            .AnyAsync(e => e.DebtorId == command.DebtorId);
 
         if (hasExistingAccount)
             return new ProblemDetails
@@ -46,9 +46,9 @@ public static class Endpoint
     [Tags(Tag.LoanAccount)]
     [WolverinePost(CreateLoanAccountEndpoint)]
     public static (IResult, IStartStream) CreateNewAccount(
-        CreateLoanAccount request)
+        CreateLoanAccountCommand command)
     {
-        LoanAccountCreated created = new(request.DebtorId, defaultLimit, DateTimeProvider.UtcNow);
+        LoanAccountCreated created = new(command.DebtorId, defaultLimit, DateTimeProvider.UtcNow);
 
         var open = MartenOps.StartStream<LoanAccount>(created);
 

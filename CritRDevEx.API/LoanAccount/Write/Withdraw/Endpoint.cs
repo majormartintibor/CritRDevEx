@@ -10,11 +10,11 @@ namespace CritRDevEx.API.LoanAccount.Write.Withdraw;
 
 public static class Endpoint
 {
-    public sealed record WithdrawFromLoanAccount(Guid LoanAccountId, decimal Amount)
+    public sealed record WithdrawFromLoanAccountCommand(Guid LoanAccountId, decimal Amount)
     {
-        public sealed class WithdrawLoanAccountValidator : AbstractValidator<WithdrawFromLoanAccount>
+        public sealed class WithdrawLoanAccountCommandValidator : AbstractValidator<WithdrawFromLoanAccountCommand>
         {
-            public WithdrawLoanAccountValidator()
+            public WithdrawLoanAccountCommandValidator()
             {
                 RuleFor(x => x.LoanAccountId).NotEmpty();
                 RuleFor(x => x.Amount).GreaterThan(0);
@@ -28,7 +28,7 @@ public static class Endpoint
     [WolverinePost(WithdrawFromLoanAccountEndpoint)]
     [AggregateHandler]
     public static (IResult, Events, OutgoingMessages) WithdrawFromAccount(
-        WithdrawFromLoanAccount request,
+        WithdrawFromLoanAccountCommand command,
         [Required] LoanAccount account)
     {
         Events events = [];
@@ -37,10 +37,10 @@ public static class Endpoint
         if (account.AccountStatus == LoanAccountStatus.Blocked)
             throw new InvalidOperationException("Account is blocked");
 
-        if (account.Balance - request.Amount < account.Limit)
+        if (account.Balance - command.Amount < account.Limit)
             throw new InvalidOperationException("Withdrawal amount exceeds account limit");
 
-        events.Add(new MoneyWithdrawn(request.LoanAccountId, request.Amount, DateTimeProvider.UtcNow));
+        events.Add(new MoneyWithdrawn(command.LoanAccountId, command.Amount, DateTimeProvider.UtcNow));
 
         return (Results.Ok(), events, messages);
     }
