@@ -1,6 +1,7 @@
 ﻿using CritRDevEx.API.Clock;
 using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Http;
@@ -22,6 +23,18 @@ public static class Endpoint
         }
     }
 
+    public static ProblemDetails Validate(WithdrawFromLoanAccountCommand command, LoanAccount account)
+    {
+        if (account.AccountStatus == LoanAccountStatus.Blocked)        
+            return new ProblemDetails { Detail = "Account is blocked", Status = StatusCodes.Status412PreconditionFailed };
+
+        if (account.Balance - command.Amount < account.Limit)
+            return new ProblemDetails { Detail = "Withdrawal amount exceeds account limit", Status = StatusCodes.Status412PreconditionFailed };
+        
+        return WolverineContinue.NoProblems;
+    }
+
+    //todo: consider moving id's to route
     public const string WithdrawFromLoanAccountEndpoint = "/api/loanAccount/withdraw";
 
     [Tags(Tag.LoanAccount)]
@@ -32,15 +45,9 @@ public static class Endpoint
         [Required] LoanAccount account)
     {
         Events events = [];
-        OutgoingMessages messages = [];
+        OutgoingMessages messages = [];        
 
-        if (account.AccountStatus == LoanAccountStatus.Blocked)
-            throw new InvalidOperationException("Account is blocked");
-
-        if (account.Balance - command.Amount < account.Limit)
-            throw new InvalidOperationException("Withdrawal amount exceeds account limit");
-
-        events.Add(new MoneyWithdrawn(command.LoanAccountId, command.Amount, DateTimeProvider.UtcNow));
+        events.Add(new MoneyWithdrawn(account.Id, command.Amount, DateTimeProvider.UtcNow));
 
         return (Results.Ok(), events, messages);
     }
