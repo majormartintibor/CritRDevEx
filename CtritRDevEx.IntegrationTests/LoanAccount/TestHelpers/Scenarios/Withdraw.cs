@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.Withdraw.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.Withdraw.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 
@@ -12,7 +12,7 @@ internal static class Withdraw
             api.Scenario(x =>
             {
                 x.Post.Url(WithdrawFromLoanAccountEndpoint);
-                x.Post.Json(new WithdrawFromLoanAccount(accountId, amount));
+                x.Post.Json(new WithdrawFromLoanAccountCommand(accountId, amount));
 
                 x.IgnoreStatusCode();
             });

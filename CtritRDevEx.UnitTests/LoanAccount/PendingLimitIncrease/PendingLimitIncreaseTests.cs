@@ -1,6 +1,5 @@
-﻿using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
-using CritRDevEx.API.LoanAccount.LimitIncrease;
-using CritRDevEx.API.LoanAccount.PendingLimitIncrease;
+﻿using CritRDevEx.API.LoanAccount.LoanAccountEvents;
+using CritRDevEx.API.LoanAccount.Read.PendingLimitIncrease;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.PendingLimitIncrease;
 public class PendingLimitIncreaseTests

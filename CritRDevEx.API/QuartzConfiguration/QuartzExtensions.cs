@@ -1,4 +1,4 @@
-﻿using CritRDevEx.API.LoanAccount.LimitIncreaseProcessor;
+﻿using CritRDevEx.API.LoanAccount.Automations.LimitIncreaseProcessor;
 using Quartz;
 
 namespace CritRDevEx.API.QuartzConfiguration;

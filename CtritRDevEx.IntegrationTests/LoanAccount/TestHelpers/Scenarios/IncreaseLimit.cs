@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.LimitIncrease.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.LimitIncrease.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 
@@ -11,7 +11,7 @@ internal static class IncreaseLimit
             api.Scenario(x =>
             {
                 x.Post.Url(RequestLimitIncreaseEndpoint);
-                x.Post.Json(new RequestLimitIncrease(accountId));
+                x.Post.Json(new RequestLimitIncreaseCommand(accountId));
 
                 x.IgnoreStatusCode();
             });

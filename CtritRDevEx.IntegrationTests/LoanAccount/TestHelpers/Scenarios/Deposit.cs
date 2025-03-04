@@ -1,5 +1,5 @@
 ﻿using Alba;
-using static CritRDevEx.API.LoanAccount.Deposit.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.Deposit.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 internal static class Deposit
@@ -11,7 +11,7 @@ internal static class Deposit
             api.Scenario(x =>
             {
                 x.Post.Url(DepositToLoanAccountEndpoint);
-                x.Post.Json(new DepositToLoanAccount(accountId, amount));
+                x.Post.Json(new DepositToLoanAccountCommand(accountId, amount));
 
                 x.IgnoreStatusCode();
             });

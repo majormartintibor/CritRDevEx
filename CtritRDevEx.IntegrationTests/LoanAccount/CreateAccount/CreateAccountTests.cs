@@ -2,7 +2,7 @@
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers;
 using CtritRDevEx.IntegrationTests.LoanAccount.TestHelpers.Scenarios;
 using JasperFx.Core;
-using static CritRDevEx.API.LoanAccount.CreateAccount.Endpoint;
+using static CritRDevEx.API.LoanAccount.Write.CreateAccount.Endpoint;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.CreateAccount;
 

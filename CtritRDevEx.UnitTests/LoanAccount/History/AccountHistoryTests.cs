@@ -1,11 +1,6 @@
 ﻿using CritRDevEx.API.Clock;
-using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
-using CritRDevEx.API.LoanAccount.BlockAccount;
-using CritRDevEx.API.LoanAccount.CreateAccount;
-using CritRDevEx.API.LoanAccount.Deposit;
-using CritRDevEx.API.LoanAccount.History;
-using CritRDevEx.API.LoanAccount.LimitIncrease;
-using CritRDevEx.API.LoanAccount.Withdraw;
+using CritRDevEx.API.LoanAccount.Read.History;
+using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using Marten.Events;
 
 namespace CtritRDevEx.UnitTests.LoanAccount.History;

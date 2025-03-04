@@ -1,6 +1,6 @@
 ﻿using CritRDevEx.API.Contracts.Sanction;
 using Wolverine;
-using static CritRDevEx.API.LoanAccount.BlockAccount.BlockLoanAccountHandler;
+using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountCommandHandler;
 
 namespace CritRDevEx.API.Sanction.Translator;
 
@@ -15,7 +15,7 @@ public static class PersonSanctionedHandler
         PersonSanctioned request,
         IMessageBus bus)
     {
-        BlockLoanAccount command = new(request.PersonId);
+        BlockLoanAccountCommand command = new(request.PersonId);
 
         await bus.SendAsync(command);
     }

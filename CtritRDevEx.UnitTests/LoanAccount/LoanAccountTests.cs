@@ -1,10 +1,5 @@
 ﻿using CritRDevEx.API.LoanAccount;
-using CritRDevEx.API.LoanAccount.AuditLimitIncreaseRequest;
-using CritRDevEx.API.LoanAccount.BlockAccount;
-using CritRDevEx.API.LoanAccount.CreateAccount;
-using CritRDevEx.API.LoanAccount.Deposit;
-using CritRDevEx.API.LoanAccount.LimitIncrease;
-using CritRDevEx.API.LoanAccount.Withdraw;
+using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using Marten.Events;
 
 namespace CtritRDevEx.UnitTests.LoanAccount;
@@ -14,7 +9,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenLoanAccountCreatedEvent_ShouldReturnAccountWithDebtorIdAndInitialLimit()
     {        
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         var debtorId = Guid.NewGuid();
         var initialLimit = 1000m;
         var createdAt = DateTimeOffset.Now;
@@ -32,7 +27,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenMoneyDepositedEvent_ShouldReturnAccountWithIncreasedBalance()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         var initialBalance = 1000m;
         var depositAmount = 500m;        
         var moneyDeposited = new MoneyDeposited(default, depositAmount, default);
@@ -47,7 +42,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenMoneyWithdrawnEvent_ShouldReturnAccountWithDecreasedBalance()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         var initialBalance = -1000m;
         var withdrawAmount = 500m;        
         var moneyWithdrawn = new MoneyWithdrawn(default, withdrawAmount, default);
@@ -62,7 +57,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenAccountBlockedEvent_ShouldReturnAccountWithBlockedStatus()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();        
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();        
         var accountBlocked = new LoanAccountBlocked(default, default);
         var @event = new Event<LoanAccountEvent>(accountBlocked);
 
@@ -74,7 +69,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenLimitIncreaseRequestedEvent_ShouldReturnAccountWithPendingLimitIncreaseRequest()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         var limitIncreaseRequested = new LimitIncreaseRequested(default, default);
         var @event = new Event<LoanAccountEvent>(limitIncreaseRequested);
 
@@ -86,7 +81,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenLimitIncreaseGrantedEvent_ShouldReturnAccountWithIncreasedLimit()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
         var initialLimit = 1000m;
         var limitIncreaseAmount = 500m;
@@ -105,7 +100,7 @@ public class LoanAccountTests
     [Fact]
     public void Apply_WhenLimitIncreaseRejectedEvent_ShouldReturnAccountWithUpdatedLastLimitEvaluationDate()
     {
-        var initialAccount = new CritRDevEx.API.LoanAccount.LoanAccount();
+        var initialAccount = new CritRDevEx.API.LoanAccount.Write.LoanAccount();
         initialAccount = initialAccount with { HasPendingLimitIncreaseRequest = true };
         var rejectedAt = DateTimeOffset.Now;
         var limitIncreaseRejected = new LimitIncreaseRejected(default, rejectedAt);
