@@ -1,6 +1,7 @@
 ﻿using CritRDevEx.API.Clock;
 using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Http;
@@ -22,6 +23,14 @@ public static class Endpoint
         }
     }
 
+    public static ProblemDetails Validate(LoanAccount account)
+    {
+        if (account.AccountStatus == LoanAccountStatus.Blocked)
+            return new ProblemDetails { Detail = "Account is blocked", Status = StatusCodes.Status412PreconditionFailed };
+
+        return WolverineContinue.NoProblems;
+    }
+
     public const string DepositToLoanAccountEndpoint = "/api/loanAccount/deposit";
 
     [Tags(Tag.LoanAccount)]
@@ -32,12 +41,9 @@ public static class Endpoint
         [Required] LoanAccount account)
     {
         Events events = [];
-        OutgoingMessages messages = [];
+        OutgoingMessages messages = [];        
 
-        if (account.AccountStatus == LoanAccountStatus.Blocked)
-            throw new InvalidOperationException("Account is blocked");
-
-        events.Add(new MoneyDeposited(command.LoanAccountId, command.Amount, DateTimeProvider.UtcNow));
+        events.Add(new MoneyDeposited(account.Id, command.Amount, DateTimeProvider.UtcNow));
 
         return (Results.Ok(), events, messages);
     }

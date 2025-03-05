@@ -45,6 +45,6 @@ public class DepositTests(AppFixture fixture) : IntegrationContext(fixture)
         await Store.BlockedAccount(accountId);
 
         IScenarioResult result = await _fixture.Host!.SendDepositRequest(accountId, amount);
-        Assert.Equal(500, result.Context.Response.StatusCode);
+        Assert.Equal(412, result.Context.Response.StatusCode);
     }
 }

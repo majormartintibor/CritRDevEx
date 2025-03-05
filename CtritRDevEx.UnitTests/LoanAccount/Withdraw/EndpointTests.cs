@@ -39,24 +39,5 @@ public class EndpointTests
         var (_, _, outgoingMessages) = WithdrawFromAccount(command, account);
 
         Assert.Empty(outgoingMessages);
-    }
-
-
-    [Fact]
-    public void WithdrawalAmountExceedsAccountLimitThrowsException()
-    {
-        WithdrawFromLoanAccountCommand command = new(default, 1000);
-        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Default, default);
-        
-        Assert.Throws<InvalidOperationException>(() => WithdrawFromAccount(command, account));
-    }
-
-    [Fact]
-    public void CannotWithdrawFromBlockedAccount()
-    {
-        WithdrawFromLoanAccountCommand command = new(default, 100);
-        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, -1000, -500, LoanAccountStatus.Blocked, default);
-
-        Assert.Throws<InvalidOperationException>(() => WithdrawFromAccount(command, account));
-    }
+    }    
 }

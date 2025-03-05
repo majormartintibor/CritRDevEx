@@ -39,14 +39,5 @@ public class EndpointTests
         var (_, _, outgoingMessages) = DepositToAccount(command, account);
 
         Assert.Empty(outgoingMessages);
-    }
-
-    [Fact]
-    public void CannotDepositToBlockedAccount()
-    {
-        DepositToLoanAccountCommand command = new(default, 100);
-        CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
-
-        Assert.Throws<InvalidOperationException>(() => DepositToAccount(command, account));
-    }
+    }    
 }

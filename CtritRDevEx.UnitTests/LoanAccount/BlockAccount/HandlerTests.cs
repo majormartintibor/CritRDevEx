@@ -30,12 +30,14 @@ public class HandlerTests
     }
 
     [Fact]
-    public void CannotBlockAlreadyBlockedAccount()
+    public void BlockingBlockAccountEmitsNoEvents()
     {
         BlockLoanAccountCommand command = new(default);
 
         CritRDevEx.API.LoanAccount.Write.LoanAccount account = new(default, default, 1000, 500, LoanAccountStatus.Blocked, default);
 
-        Assert.Throws<InvalidOperationException>(() => Handle(command, account));
+        var (events, _) = Handle(command, account);
+
+        Assert.Empty(events);
     }
 }
