@@ -1,5 +1,5 @@
 services:
-  api:
+  critrdevex.api:
     image: ${DOCKER_REGISTRY-}critrdevexapi
     container_name: api
     build:
@@ -8,7 +8,7 @@ services:
     ports:
       - 8080:8080
 
-  database:
+  critrdevex.database:
     image: postgres:latest
     container_name: database
     environment:

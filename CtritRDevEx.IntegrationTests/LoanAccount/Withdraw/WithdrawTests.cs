@@ -19,7 +19,7 @@ public class WithdrawTests(AppFixture fixture) : IntegrationContext(fixture)
         await Store.AccountWithLastLimitEvaluationDateYoungerThanThirtyDaysExist(accountId);
 
         IScenarioResult result = await _fixture.Host!.SendWithdrawRequest(accountId, amount);
-        Assert.Equal(200, result.Context.Response.StatusCode);
+        Assert.Equal(204, result.Context.Response.StatusCode);
     }
 
     [Fact]

@@ -3,7 +3,6 @@ using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using Wolverine;
 using Wolverine.Http;
 using Wolverine.Marten;
 
@@ -38,17 +37,10 @@ public static class Endpoint
     public const string WithdrawFromLoanAccountEndpoint = "/api/loanAccount/withdraw";
 
     [Tags(Tag.LoanAccount)]
-    [WolverinePost(WithdrawFromLoanAccountEndpoint)]
+    [WolverinePost(WithdrawFromLoanAccountEndpoint), EmptyResponse]
     [AggregateHandler]
-    public static (IResult, Events, OutgoingMessages) WithdrawFromAccount(
+    public static MoneyWithdrawn WithdrawFromAccount(
         WithdrawFromLoanAccountCommand command,
         [Required] LoanAccount account)
-    {
-        Events events = [];
-        OutgoingMessages messages = [];        
-
-        events.Add(new MoneyWithdrawn(account.Id, command.Amount, DateTimeProvider.UtcNow));
-
-        return (Results.Ok(), events, messages);
-    }
+            => new(account.Id, command.Amount, DateTimeProvider.UtcNow);    
 }
