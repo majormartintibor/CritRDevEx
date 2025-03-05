@@ -17,7 +17,7 @@ public class LimitIncreaseEndpointTests(AppFixture fixture) : IntegrationContext
 
         IScenarioResult result = await _fixture.Host!.SendLimitIncreaseRequest(accountId);
 
-        Assert.Equal(500, result.Context.Response.StatusCode);
+        Assert.Equal(412, result.Context.Response.StatusCode);
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public class LimitIncreaseEndpointTests(AppFixture fixture) : IntegrationContext
 
         IScenarioResult result = await _fixture.Host!.SendLimitIncreaseRequest(accountId);
 
-        Assert.Equal(500, result.Context.Response.StatusCode);
+        Assert.Equal(412, result.Context.Response.StatusCode);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class LimitIncreaseEndpointTests(AppFixture fixture) : IntegrationContext
 
         IScenarioResult result = await _fixture.Host!.SendLimitIncreaseRequest(accountId);
 
-        Assert.Equal(500, result.Context.Response.StatusCode);        
+        Assert.Equal(412, result.Context.Response.StatusCode);        
     }
 
     [Fact]

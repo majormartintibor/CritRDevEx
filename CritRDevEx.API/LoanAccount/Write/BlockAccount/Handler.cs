@@ -28,10 +28,8 @@ public static class BlockLoanAccountCommandHandler
         Events events = [];
         OutgoingMessages messages = [];
 
-        if (account.AccountStatus == LoanAccountStatus.Blocked)
-            throw new InvalidOperationException("Account is already blocked");
-
-        events.Add(new LoanAccountBlocked(command.LoanAccountId, DateTimeProvider.UtcNow));
+        if (account.AccountStatus != LoanAccountStatus.Blocked)
+            events.Add(new LoanAccountBlocked(command.LoanAccountId, DateTimeProvider.UtcNow));
 
         return (events, messages);
     }

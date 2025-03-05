@@ -44,7 +44,7 @@ public class WithdrawTests(AppFixture fixture) : IntegrationContext(fixture)
         await Store.BlockedAccount(accountId);
 
         IScenarioResult result = await _fixture.Host!.SendWithdrawRequest(accountId, amount);
-        Assert.Equal(500, result.Context.Response.StatusCode);
+        Assert.Equal(412, result.Context.Response.StatusCode);
     }
 
     [Fact]
@@ -55,6 +55,6 @@ public class WithdrawTests(AppFixture fixture) : IntegrationContext(fixture)
         await Store.AccountWithLastLimitEvaluationDateYoungerThanThirtyDaysExist(accountId);
 
         IScenarioResult result = await _fixture.Host!.SendWithdrawRequest(accountId, amount);
-        Assert.Equal(500, result.Context.Response.StatusCode);
+        Assert.Equal(412, result.Context.Response.StatusCode);
     }
 }

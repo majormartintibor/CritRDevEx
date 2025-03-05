@@ -1,6 +1,7 @@
 ﻿using CritRDevEx.API.Clock;
 using CritRDevEx.API.LoanAccount.LoanAccountEvents;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Wolverine;
 using Wolverine.Http;
@@ -21,6 +22,20 @@ public static class Endpoint
         }
     }
 
+    public static ProblemDetails Validate(LoanAccount account)
+    {
+        if (account.AccountStatus == LoanAccountStatus.Blocked)
+            return new ProblemDetails { Detail = "Account is blocked", Status = StatusCodes.Status412PreconditionFailed };
+
+        if (account.HasPendingLimitIncreaseRequest)
+            return new ProblemDetails { Detail = "Limit increase request is already pending", Status = StatusCodes.Status412PreconditionFailed };
+        
+        if (account.LastLimitEvaluationDate > DateTimeOffset.UtcNow.AddDays(-30))
+            return new ProblemDetails { Detail = "Limit increase can be requested only once in 30 days", Status = StatusCodes.Status412PreconditionFailed };
+        
+        return WolverineContinue.NoProblems;
+    }
+
     public const string RequestLimitIncreaseEndpoint = "/api/loanAccount/requestLimitIncrease";
 
     [Tags(Tag.LoanAccount)]
@@ -31,18 +46,10 @@ public static class Endpoint
         [Required] LoanAccount account)
     {
         Events events = [];
-        OutgoingMessages messages = [];
+        OutgoingMessages messages = [];        
 
-        if (account.AccountStatus == LoanAccountStatus.Blocked)
-            throw new InvalidOperationException("Account is blocked");
+        events.Add(new LimitIncreaseRequested(account.Id, DateTimeProvider.UtcNow));
 
-        if (account.HasPendingLimitIncreaseRequest)
-            throw new InvalidOperationException("Limit increase request is already pending");
-
-        if (account.LastLimitEvaluationDate > DateTimeOffset.UtcNow.AddDays(-30))
-            throw new InvalidOperationException("Limit increase can be requested only once in 30 days");
-
-        events.Add(new LimitIncreaseRequested(command.LoanAccountId, DateTimeProvider.UtcNow));
         return (Results.Ok(), events, messages);
     }
 }

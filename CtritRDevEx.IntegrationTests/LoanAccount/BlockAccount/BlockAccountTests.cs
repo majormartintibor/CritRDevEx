@@ -5,6 +5,7 @@ using CtritRDevEx.IntegrationTests.TestHelpers;
 using JasperFx.Core;
 using Marten.Events;
 using Wolverine;
+using Wolverine.Marten;
 using static CritRDevEx.API.LoanAccount.Write.BlockAccount.BlockLoanAccountCommandHandler;
 
 namespace CtritRDevEx.IntegrationTests.LoanAccount.BlockAccount;
@@ -26,15 +27,5 @@ public class BlockAccountTests(AppFixture fixture) : IntegrationContext(fixture)
         var updated = await _fixture.Host!.GetLoanAccountDetails(accountId);
         Assert.NotNull(updated);
         Assert.Equal(LoanAccountStatus.Blocked, updated.AccountStatus);
-    }
-
-    [Fact]
-    public async Task BlockingAnAlreadyBlockedAccountFails()
-    {
-        var accountId = CombGuidIdGeneration.NewGuid();
-        await Store.BlockedAccount(accountId);
-        BlockLoanAccountCommand message = new(accountId);
-
-        _ = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _fixture.Host!.InvokeAsync(message));
-    }
+    }    
 }
